@@ -30,7 +30,7 @@ public class GameLayer extends AbstractReceiverLayer {
 		if (NerdRageGame.DEBUG) {
 			shapeRenderer.begin(ShapeType.Filled);
 			shapeRenderer.setColor(0, 1, 1, 1);
-			shapeRenderer.circle(200.0f, 200.0f, 50.0f);
+			shapeRenderer.circle(0.0f, 120.0f, 50.0f);
 			shapeRenderer.end();
 		}
 		

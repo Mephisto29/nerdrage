@@ -2,10 +2,11 @@ package com.nerdrage.layers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.nerdrage.NerdRageGame;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.*;
 
 /**
  * This layer will be used to display the control overlay. It will accept user input and
@@ -21,6 +22,10 @@ public class ControlLayer extends AbstractLayer {
 	private SpriteBatch batch; 
 	private ShapeRenderer shapeRenderer;
 	
+	private Texture dPadTexture;
+	private Sprite dPadSprite;
+	
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
@@ -28,6 +33,11 @@ public class ControlLayer extends AbstractLayer {
 		batch = new SpriteBatch ();
 		shapeRenderer = new ShapeRenderer ();
 		receiver = null;
+		
+		// create texture assets
+		dPadTexture = new Texture (Gdx.files.internal("data/DPad.png"));
+		dPadSprite = new Sprite (dPadTexture);
+		dPadSprite.setPosition(5.0f, 5.0f);
 	}
 	
 	/**
@@ -40,15 +50,18 @@ public class ControlLayer extends AbstractLayer {
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		
+		/*
 		if (NerdRageGame.DEBUG) {
 			shapeRenderer.begin(ShapeType.Filled);
 			shapeRenderer.setColor(1f, 0.6f, 0.6f, 0.7f);
-			shapeRenderer.circle(210.0f, 210.0f, 30.0f);
+			shapeRenderer.rect(200.0f, 200.0f, 32.0f, 32.0f);
 			shapeRenderer.end();
 		}
+		*/
 		
 		batch.begin();
 		// textures and sprites will be rendered here 
+		dPadSprite.draw(batch, 0.7f);
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
