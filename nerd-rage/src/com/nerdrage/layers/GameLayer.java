@@ -2,7 +2,7 @@ package com.nerdrage.layers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.*;
 import com.nerdrage.NerdRageGame;
 
 public class GameLayer extends AbstractReceiverLayer {
