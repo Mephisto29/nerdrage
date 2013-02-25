@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.*;
 
 /**
  * This layer will be used to display the control overlay. It will accept user input and
@@ -20,24 +18,35 @@ public class ControlLayer extends AbstractLayer {
 	 */
 	private AbstractReceiverLayer receiver;
 	private SpriteBatch batch; 
-	private ShapeRenderer shapeRenderer;
 	
 	private Texture dPadTexture;
 	private Sprite dPadSprite;
 	
+	private Texture xyButtonTexture;
+	private Sprite xyButtonSprite;
+	
+	private Texture startButtonTexture;
+	private Sprite startButtonSprite;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
 	public ControlLayer() {
 		batch = new SpriteBatch ();
-		shapeRenderer = new ShapeRenderer ();
 		receiver = null;
 		
 		// create texture assets
 		dPadTexture = new Texture (Gdx.files.internal("data/DPad.png"));
 		dPadSprite = new Sprite (dPadTexture);
 		dPadSprite.setPosition(5.0f, 5.0f);
+		
+		xyButtonTexture = new Texture (Gdx.files.internal("data/XYButtons.png"));
+		xyButtonSprite = new Sprite (xyButtonTexture);
+		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 133.0f, 5.0f);
+		
+		startButtonTexture = new Texture (Gdx.files.internal("data/StartButton.png"));
+		startButtonSprite = new Sprite (startButtonTexture);
+		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 32.0f , 5.0f);
 	}
 	
 	/**
@@ -49,19 +58,11 @@ public class ControlLayer extends AbstractLayer {
 		
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		
-		/*
-		if (NerdRageGame.DEBUG) {
-			shapeRenderer.begin(ShapeType.Filled);
-			shapeRenderer.setColor(1f, 0.6f, 0.6f, 0.7f);
-			shapeRenderer.rect(200.0f, 200.0f, 32.0f, 32.0f);
-			shapeRenderer.end();
-		}
-		*/
-		
+	
 		batch.begin();
-		// textures and sprites will be rendered here 
-		dPadSprite.draw(batch, 0.7f);
+		dPadSprite.draw(batch, 0.6f);
+		xyButtonSprite.draw(batch, 0.6f);
+		startButtonSprite.draw(batch, 0.6f);
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
