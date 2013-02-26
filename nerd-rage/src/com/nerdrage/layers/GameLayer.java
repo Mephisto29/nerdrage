@@ -32,37 +32,37 @@ public class GameLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void upPressed() {
-		
+		System.out.println ("U");
 	}
 
 	@Override
 	public void downPressed() {
-		
+		System.out.println ("D");
 	}
 
 	@Override
 	public void leftPressed() {
-		
+		System.out.println ("L");
 	}
 
 	@Override
 	public void rightPressed() {
-		
+		System.out.println ("R");
 	}
 
 	@Override
 	public void xPressed() {
-		
+		System.out.println ("X");
 	}
 
 	@Override
 	public void yPressed() {
-			
+		System.out.println ("Y");	
 	}
 
 	@Override
 	public void startPressed() {
-		
+		System.out.println ("S");
 	}
 
 }

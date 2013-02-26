@@ -1,5 +1,9 @@
 package com.nerdrage.layers;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,6 +17,29 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public class ControlLayer extends AbstractLayer {
 
+	/**
+	 * A private inner class which will handle the resetting of the input
+	 * availability array. This will be used to ensure that the player can
+	 * only press each input once every 0.25 seconds or so. Basically, we are
+	 * just filtering out unneeded input
+	 */
+	private class InputDelayResetter implements Runnable {
+		
+		public final int toReset;
+		
+		public InputDelayResetter (int toReset) {
+			this.toReset = toReset;
+		}
+		
+		@Override
+		public void run() {
+			synchronized (this) {
+				available[toReset] = true;
+			}
+		}
+	}
+	
+	
 	/**
 	 * Private instance variables
 	 */
@@ -29,12 +56,25 @@ public class ControlLayer extends AbstractLayer {
 	private Sprite startButtonSprite;
 
 	private boolean[] available;
-	private enum Button {LEFT, UP, DOWN, RIGHT, START, Y, X, NONE};
+	
+	/**
+	 * An enum to simplify the understanding of the code to check the state of the buttons
+	 */
+	public enum Button {
+		
+		LEFT(0), UP(1), DOWN(2), RIGHT(3), START(4), Y(5), X(6), NONE(7);	
+	
+		public final int id;
+		
+		Button (int id) {
+			this.id = id;
+		}
+	}
 	
 	/**
 	 * Public variables to control rate at which input is received
 	 */
-	public static final float RECEIVER_DELAY = 0.25f;
+	public static final long RECEIVER_DELAY = 250;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
@@ -109,41 +149,34 @@ public class ControlLayer extends AbstractLayer {
 			// we then segment according to x values and test the possible buttons in the current x range
 			if (x < 46 && x >= 5) {
 				if (y >= 50 && y <= 90) {
-					System.out.println ("Left pressed");
 					button = Button.LEFT;
 				}
 			}
 			else if (x < 91) {
 				if (y >= 90) {
-					System.out.println ("Up pressed");
 					button = Button.UP;
 				}
 				else if (y <= 50) {
-					System.out.println ("Down pressed");
 					button = Button.DOWN;
 				}
 			}
 			else if (x < 131) {
 				if (y >= 50 && y <= 90) {
-					System.out.println ("Right pressed");
 					button = Button.RIGHT;
 				}	
 			}
 			else if (x >= 368 && x < 430) {
 				if (y < 40) {
-					System.out.println ("Start pressed");
 					button = Button.START;
 				}
 			}
 			else if (x > 668 && x < 730) {
 				if (y < 73) {
-					System.out.println ("Y pressed");
 					button = Button.Y;
 				}	
 			}
 			else if (x > 730 && x < 795) {
 				if (y > 73) {
-					System.out.println("X pressed");
 					button = Button.X;
 				}	
 			}
@@ -152,9 +185,51 @@ public class ControlLayer extends AbstractLayer {
 		// check that we registered a button press
 		if (button != Button.NONE) {
 			
-			
-			
+			synchronized (this) {
+				
+				// check that the button can be pressed again
+				if (available [button.id]) {
+					
+					// send a message to the receiver
+					switch (button) {
+						case LEFT: {
+							receiver.leftPressed();
+							break;
+						}
+						case UP: {
+							receiver.upPressed();
+							break;
+						}
+						case DOWN: {
+							receiver.downPressed();
+							break;
+						}
+						case RIGHT: {
+							receiver.rightPressed();
+							break;
+						}
+						case START: {
+							receiver.startPressed();
+							break;
+						}
+						case Y: {
+							receiver.yPressed();
+							break;
+						}
+						case X: {
+							receiver.xPressed();
+							break;
+						}
+					}
+					
+					available[button.id] = false;
+					
+					// reset the availability of the button after the specified time
+					InputDelayResetter resetter = new InputDelayResetter(button.id);
+					ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+					executor.schedule(resetter, RECEIVER_DELAY, TimeUnit.MILLISECONDS);	
+				}
+			}
 		}
 	}
-
 }
