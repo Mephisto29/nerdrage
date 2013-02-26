@@ -27,6 +27,14 @@ public class ControlLayer extends AbstractLayer {
 	
 	private Texture startButtonTexture;
 	private Sprite startButtonSprite;
+
+	private boolean[] available;
+	private enum Button {LEFT, UP, DOWN, RIGHT, START, Y, X, NONE};
+	
+	/**
+	 * Public variables to control rate at which input is received
+	 */
+	public static final float RECEIVER_DELAY = 0.25f;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
@@ -47,6 +55,12 @@ public class ControlLayer extends AbstractLayer {
 		startButtonTexture = new Texture (Gdx.files.internal("data/StartButton.png"));
 		startButtonSprite = new Sprite (startButtonTexture);
 		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 32.0f , 5.0f);
+		
+		// initialise availability array
+		available = new boolean[7];
+		for (int i = 0; i < 7; i++) {
+			available[i] = true;
+		}
 	}
 	
 	/**
@@ -75,6 +89,72 @@ public class ControlLayer extends AbstractLayer {
 	 */
 	public void setReceiver (AbstractReceiverLayer receiver) {
 		this.receiver = receiver;
+	}
+	
+	/**
+	 * Method to handle touch input from the user. It will go through the possible input areas of the 
+	 * screen and if any are being pressed the relevant message will be sent to the receiver
+	 * 
+	 * @param x The x coordinate of the touch on the screen
+	 * @param y The y coordinate of the touch on the screen
+	 */
+	public void handleTouch (int x, int y) {
+		
+		// TODO: Ensure that this works on the android device
+		Button button = Button.NONE;
+		
+		// only process touches in the bottom strip of the screen
+		if (y <= 133 && y > 5) {
+			
+			// we then segment according to x values and test the possible buttons in the current x range
+			if (x < 46 && x >= 5) {
+				if (y >= 50 && y <= 90) {
+					System.out.println ("Left pressed");
+					button = Button.LEFT;
+				}
+			}
+			else if (x < 91) {
+				if (y >= 90) {
+					System.out.println ("Up pressed");
+					button = Button.UP;
+				}
+				else if (y <= 50) {
+					System.out.println ("Down pressed");
+					button = Button.DOWN;
+				}
+			}
+			else if (x < 131) {
+				if (y >= 50 && y <= 90) {
+					System.out.println ("Right pressed");
+					button = Button.RIGHT;
+				}	
+			}
+			else if (x >= 368 && x < 430) {
+				if (y < 40) {
+					System.out.println ("Start pressed");
+					button = Button.START;
+				}
+			}
+			else if (x > 668 && x < 730) {
+				if (y < 73) {
+					System.out.println ("Y pressed");
+					button = Button.Y;
+				}	
+			}
+			else if (x > 730 && x < 795) {
+				if (y > 73) {
+					System.out.println("X pressed");
+					button = Button.X;
+				}	
+			}
+		}
+		
+		// check that we registered a button press
+		if (button != Button.NONE) {
+			
+			
+			
+		}
 	}
 
 }

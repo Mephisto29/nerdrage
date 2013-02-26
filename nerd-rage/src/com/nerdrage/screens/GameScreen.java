@@ -26,6 +26,12 @@ public class GameScreen extends AbstractScreen {
 	
 	@Override
 	public void render(float delta) {
+		
+		if (Gdx.input.isTouched()) {
+			// pass the input on to the control layer
+			controlLayer.handleTouch(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+		}
+		
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
