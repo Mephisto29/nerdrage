@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
@@ -54,6 +55,9 @@ public class ControlLayer extends AbstractLayer {
 	
 	private Texture startButtonTexture;
 	private Sprite startButtonSprite;
+	
+	private Texture topBarTexture;
+	private Sprite topBarSprite;
 
 	private boolean[] available;
 	
@@ -74,7 +78,7 @@ public class ControlLayer extends AbstractLayer {
 	/**
 	 * Public variables to control rate at which input is received
 	 */
-	public static final long RECEIVER_DELAY = 250;
+	public static final long RECEIVER_DELAY = 500;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
@@ -95,6 +99,12 @@ public class ControlLayer extends AbstractLayer {
 		startButtonTexture = new Texture (Gdx.files.internal("data/StartButton.png"));
 		startButtonSprite = new Sprite (startButtonTexture);
 		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 32.0f , 5.0f);
+		
+		topBarTexture = new Texture (Gdx.files.internal("data/TopBarRepeat.png"));
+		topBarTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		topBarSprite = new Sprite (topBarTexture);
+		topBarSprite.setPosition(0.0f, Gdx.graphics.getHeight() - 64.0f);
+		topBarSprite.setSize(Gdx.graphics.getWidth(), 64.0f);
 		
 		// initialise availability array
 		available = new boolean[7];
@@ -117,6 +127,7 @@ public class ControlLayer extends AbstractLayer {
 		dPadSprite.draw(batch, 0.6f);
 		xyButtonSprite.draw(batch, 0.6f);
 		startButtonSprite.draw(batch, 0.6f);
+		topBarSprite.draw(batch, 0.6f);
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
