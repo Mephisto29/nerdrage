@@ -21,6 +21,7 @@ public class GameScreen extends AbstractScreen {
 	public GameScreen () {
 		gameLayer = new GameLayer();
 		controlLayer = new ControlLayer();
+		
 		controlLayer.setReceiver (gameLayer);
 	}
 	
