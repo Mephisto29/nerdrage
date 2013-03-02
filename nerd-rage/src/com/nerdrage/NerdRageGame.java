@@ -1,10 +1,12 @@
 package com.nerdrage;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.nerdrage.screens.*;
 
 public class NerdRageGame extends Game {
+	
 	
 	/**
 	 * Static variables which the whole game needs to know about
@@ -17,7 +19,7 @@ public class NerdRageGame extends Game {
 	@Override
 	public void create() {		
 		fpsLogger = new FPSLogger();
-		setScreen (new GameScreen ());
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override
@@ -28,6 +30,7 @@ public class NerdRageGame extends Game {
 	@Override
 	public void render() {		
 		super.render();
+		
 	}
 
 	@Override
