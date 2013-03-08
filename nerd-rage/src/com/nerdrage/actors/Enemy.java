@@ -1,6 +1,6 @@
-package com.nerdrage;
+package com.nerdrage.actors;
 
-public class Player 
+public class Enemy 
 {
 	int health;
 	
@@ -15,7 +15,7 @@ public class Player
 	}
 	
 	
-	public Player()
+	public Enemy()
 	{
 		health = 100;
 	}

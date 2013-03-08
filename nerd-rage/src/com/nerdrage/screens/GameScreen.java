@@ -36,7 +36,7 @@ public class GameScreen extends AbstractScreen {
 		
 		// log frame rate
 		if (NerdRageGame.DEBUG) {
-			//NerdRageGame.fpsLogger.log();
+			NerdRageGame.fpsLogger.log();
 		}
 		
 		if (Gdx.input.isTouched()) {

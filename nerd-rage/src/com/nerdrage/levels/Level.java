@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.io.*;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.nerdrage.NerdRageGame;
 
 /**
  * Level class which will contain information about the area in which the user is. As well as
@@ -89,13 +90,15 @@ public class Level {
 		}
 		
 		// for testing purposes
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++)  {
-				System.out.print (levelGrid[y][x]);
+		if (NerdRageGame.DEBUG) {
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++)  {
+					System.out.print (levelGrid[y][x]);
+				}
+				System.out.println ();
 			}
-			System.out.println ();
+			
+			System.out.println (interactiveBlocks);
 		}
-		
-		System.out.println (interactiveBlocks);
 	}
 }

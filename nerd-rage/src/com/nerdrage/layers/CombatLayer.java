@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.nerdrage.Enemy;
-import com.nerdrage.Player;
+import com.nerdrage.actors.Enemy;
+import com.nerdrage.actors.Player;
 
 public class CombatLayer extends AbstractReceiverLayer {
 	
