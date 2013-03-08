@@ -78,6 +78,5 @@ public class Level {
 		}
 		
 		System.out.println (interactiveBlocks);
-		System.out.println (interactiveBlocks.size());
 	}
 }
