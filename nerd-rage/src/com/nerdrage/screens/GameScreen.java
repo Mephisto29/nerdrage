@@ -16,13 +16,15 @@ public class GameScreen extends AbstractScreen {
 	 * information about the player and the current game state.
 	 */
 	private GameLayer gameLayer;
+	private CombatLayer combatLayer;
 	private ControlLayer controlLayer;
 	
 	public GameScreen () {
 		gameLayer = new GameLayer();
+		combatLayer = new CombatLayer();
 		controlLayer = new ControlLayer();
 		
-		controlLayer.setReceiver (gameLayer);
+		controlLayer.setReceiver (combatLayer);
 	}
 	
 	@Override
@@ -36,7 +38,7 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		gameLayer.draw();
+		combatLayer.draw();
 		controlLayer.draw();
 	}
 	
