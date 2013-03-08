@@ -53,13 +53,32 @@ public class Level {
 				char key = line.charAt(0);
 				char indicator = line.charAt(2);
 				
-				GridBlock block = new GridBlock();
+				GridBlock block = null;
 				
 				if (indicator == '{') {
 					// process the list of items
+					int posStart = line.indexOf('{');
+					int posEnd = line.indexOf('}');
+					
+					int numItems = Integer.valueOf(line.substring(posStart + 1, posEnd));
+					
+					String[] itemIds = new String[numItems];
+					float[] probs = new float[numItems];
+					
+					String[] raw = line.substring(posEnd + 1, line.length()).split(",");
+					
+					for (int j = 0; j < numItems; j++) {
+						String[] split = raw[j].substring(1, raw[j].length() - 1).split(";");
+						itemIds[j] = split[0];
+						probs[j] = Float.valueOf(split[1]);
+					}
+					
+					block = new GridBlock(itemIds, probs, null, true);
 				}
 				else if (indicator == '"') {
-					// process the text
+					// process the interaction text
+					String interactionText = line.substring(3, line.length() - 1);
+					block = new GridBlock(null, null, interactionText, false);
 				}
 				
 				interactiveBlocks.put(key, block);

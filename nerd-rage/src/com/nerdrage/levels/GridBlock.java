@@ -28,14 +28,16 @@ public class GridBlock {
 	 */
 	public GridBlock (String[] itemIds, float[] probabilities, String interactionText, boolean isItemPickup) {
 
-		this.possibleItemIDs = new String[itemIds.length];
-		this.probabilities = new float[itemIds.length];
+		if (itemIds != null && probabilities != null) {
+			this.possibleItemIDs = new String[itemIds.length];
+			this.probabilities = new float[itemIds.length];
 		
-		for (int i =0; i < itemIds.length; i++) {
-			this.possibleItemIDs[i] = itemIds[i];
-			this.probabilities[i] = probabilities[i];
+			for (int i =0; i < itemIds.length; i++) {
+				this.possibleItemIDs[i] = itemIds[i];
+				this.probabilities[i] = probabilities[i];
+			}
 		}
-	
+		
 		this.interactionText = interactionText;
 		this.isItemPickup = isItemPickup;
 	}
@@ -73,5 +75,33 @@ public class GridBlock {
 		
 		return null;
 	}
+	
+	/**
+	 * Method to check if the block gives out items to the player or is just interactable
+	 * 
+	 * @return Whether or not the player can pick up items from the block.
+	 */
+	public boolean isItemPickup () {
+		return isItemPickup;
+	}
 
+	/**
+	 * For debugging purposes. Used to print a useful representation of the GridBlock to
+	 * the output stream.
+	 * 
+	 * @return A string representation of the object
+	 */
+	public String toString () {
+		
+		if (isItemPickup) {
+			String line = "GridBlock: " + possibleItemIDs.length + " items: ";
+			for (int i = 0; i < possibleItemIDs.length; i++) {
+				line += "[" + possibleItemIDs[i] + ", " + probabilities[i] + "]; ";
+			}
+			return line.trim();
+		}
+		
+		return "GridBlock: " + interactionText;
+	}
+	
 }
