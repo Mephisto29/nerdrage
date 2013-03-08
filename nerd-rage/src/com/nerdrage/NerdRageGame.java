@@ -6,6 +6,7 @@ import com.nerdrage.screens.*;
 
 public class NerdRageGame extends Game {
 	
+	
 	/**
 	 * Static variables which the whole game needs to know about
 	 */
@@ -17,7 +18,7 @@ public class NerdRageGame extends Game {
 	@Override
 	public void create() {		
 		fpsLogger = new FPSLogger();
-		setScreen (new GameScreen ());
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override
@@ -28,6 +29,7 @@ public class NerdRageGame extends Game {
 	@Override
 	public void render() {		
 		super.render();
+		
 	}
 
 	@Override
