@@ -24,7 +24,7 @@ public class GameScreen extends AbstractScreen {
 		controlLayer = new ControlLayer();
 		
 		controlLayer.setReceiver (gameLayer);
-		//controlLayer.setStartButtonVisible(false);
+		controlLayer.setStartButtonVisible(false);
 	}
 	
 	@Override

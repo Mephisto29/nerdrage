@@ -239,8 +239,8 @@ public class ControlLayer extends AbstractLayer {
 						case START: {
 							if (startButtonVisible) {
 								receiver.startPressed();
-								break;
 							}
+							break;
 						}
 						case Y: {
 							receiver.yPressed();
