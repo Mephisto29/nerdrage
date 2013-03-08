@@ -1,6 +1,9 @@
 package com.nerdrage.layers;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.nerdrage.screens.MainMenuScreen;
+import com.nerdrage.screens.ResumeMainMenuScreen;
 
 public class GameLayer extends AbstractReceiverLayer {
 
@@ -8,12 +11,14 @@ public class GameLayer extends AbstractReceiverLayer {
 	 * Private instance variables
 	 */
 	private SpriteBatch batch; 
+	private Game game;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
-	public GameLayer() {
+	public GameLayer(Game game) {
 		batch = new SpriteBatch ();
+		this.game=game;
 	}
 	
 	/**
@@ -63,6 +68,8 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void startPressed() {
 		System.out.println ("S");
+		game.setScreen(new ResumeMainMenuScreen(game));
+		
 	}
 
 }

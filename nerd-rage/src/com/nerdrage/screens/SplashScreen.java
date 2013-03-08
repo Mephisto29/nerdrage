@@ -37,7 +37,7 @@ public class SplashScreen extends AbstractScreen {
 		
 		timer+=delta;
 		if(Gdx.input.isTouched()||(timer>=4)){
-			game.setScreen (new MainMenuScreen ());
+			game.setScreen (new MainMenuScreen (game));
 		}
 	}
 
