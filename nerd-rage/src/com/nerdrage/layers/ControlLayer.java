@@ -61,6 +61,8 @@ public class ControlLayer extends AbstractLayer {
 
 	private boolean[] available;
 	
+	private boolean startButtonVisible;
+	
 	/**
 	 * An enum to simplify the understanding of the code to check the state of the buttons
 	 */
@@ -111,6 +113,8 @@ public class ControlLayer extends AbstractLayer {
 		for (int i = 0; i < 7; i++) {
 			available[i] = true;
 		}
+		
+		startButtonVisible = true;
 	}
 	
 	/**
@@ -124,10 +128,15 @@ public class ControlLayer extends AbstractLayer {
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	
 		batch.begin();
+		
 		dPadSprite.draw(batch, 0.6f);
 		xyButtonSprite.draw(batch, 0.6f);
-		startButtonSprite.draw(batch, 0.6f);
 		topBarSprite.draw(batch, 0.6f);
+		
+		if (startButtonVisible) {
+			startButtonSprite.draw(batch, 0.6f);
+		}
+		
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
@@ -143,6 +152,15 @@ public class ControlLayer extends AbstractLayer {
 	}
 	
 	/**
+	 * Method to choose whether or not to display the start button
+	 * 
+	 * @param visible
+	 */
+	public void setStartButtonVisible (boolean visible) {
+		startButtonVisible = visible;
+	}
+	
+	/**
 	 * Method to handle touch input from the user. It will go through the possible input areas of the 
 	 * screen and if any are being pressed the relevant message will be sent to the receiver
 	 * 
@@ -150,8 +168,7 @@ public class ControlLayer extends AbstractLayer {
 	 * @param y The y coordinate of the touch on the screen
 	 */
 	public void handleTouch (int x, int y) {
-		
-		// TODO: Ensure that this works on the android device
+	
 		Button button = Button.NONE;
 		
 		// only process touches in the bottom strip of the screen
@@ -220,7 +237,9 @@ public class ControlLayer extends AbstractLayer {
 							break;
 						}
 						case START: {
-							receiver.startPressed();
+							if (startButtonVisible) {
+								receiver.startPressed();
+							}
 							break;
 						}
 						case Y: {
