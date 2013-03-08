@@ -3,6 +3,7 @@ package com.nerdrage.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.nerdrage.layers.*;
+import com.nerdrage.*;
 
 /**
  * This will be the main screen in which the game takes place. The game screen will display a
@@ -23,10 +24,15 @@ public class GameScreen extends AbstractScreen {
 		controlLayer = new ControlLayer();
 		
 		controlLayer.setReceiver (gameLayer);
+		//controlLayer.setStartButtonVisible(false);
 	}
 	
 	@Override
 	public void render(float delta) {
+		
+		// log frame rate
+		if (NerdRageGame.DEBUG)
+			NerdRageGame.fpsLogger.log();
 		
 		if (Gdx.input.isTouched()) {
 			// pass the input on to the control layer
