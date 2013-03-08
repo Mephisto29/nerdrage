@@ -122,7 +122,7 @@ public class ControlLayer extends AbstractLayer {
 	 * transparent and will have button controls for the user to interact with
 	 */
 	@Override
-	public void draw() {
+	public void draw(float delta) {
 		
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);

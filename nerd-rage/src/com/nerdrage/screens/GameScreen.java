@@ -21,14 +21,15 @@ public class GameScreen extends AbstractScreen {
 	private CombatLayer combatLayer;
 	private ControlLayer controlLayer;
 	private Game game;
+	private boolean inCombat;
 
 	public GameScreen (Game game) {
 		gameLayer = new GameLayer(game);
 		combatLayer = new CombatLayer();
 		controlLayer = new ControlLayer();
 		
-		controlLayer.setReceiver (combatLayer);
-		controlLayer.setStartButtonVisible(false);
+		controlLayer.setReceiver (gameLayer);
+		controlLayer.setStartButtonVisible(true);
 	}
 	
 	@Override
@@ -36,7 +37,7 @@ public class GameScreen extends AbstractScreen {
 		
 		// log frame rate
 		if (NerdRageGame.DEBUG) {
-			NerdRageGame.fpsLogger.log();
+			//NerdRageGame.fpsLogger.log();
 		}
 		
 		if (Gdx.input.isTouched()) {
@@ -47,8 +48,14 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		combatLayer.draw();
-		controlLayer.draw();
+		if (inCombat) {
+			combatLayer.draw(delta);
+		}
+		else {
+			gameLayer.draw(delta);
+		}
+		
+		controlLayer.draw(delta);
 	}
 	
 	@Override
