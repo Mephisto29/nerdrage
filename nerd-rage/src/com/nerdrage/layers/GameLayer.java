@@ -1,14 +1,18 @@
 package com.nerdrage.layers;
 
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.nerdrage.levels.*;
 import com.nerdrage.objects.Item;
 import com.badlogic.gdx.Game;
@@ -33,12 +37,15 @@ public class GameLayer extends AbstractReceiverLayer {
 	private Stage stage;
 	private Actor character;
 	private Actor level;
+	private Actor dialogBox;
 	
 	private int positionX;
 	private int positionY;
 	
 	private enum Direction {LEFT, RIGHT, UP, DOWN};
 	private Direction currentPlayerDirection;
+	
+	private Label dialogLabel;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
@@ -198,18 +205,36 @@ public class GameLayer extends AbstractReceiverLayer {
 		GridBlock g = currentLevel.getGridBlockForCharacter(c);
 		
 		if (g != null) {
+			
+			Texture dialogTexture = new Texture(Gdx.files.internal("ui/DialogBox.png"));
+			dialogBox = new Image(dialogTexture);
+			dialogBox.setPosition(WIDTH / 2.0f - 256.0f, 5.0f);
+			stage.addActor(dialogBox);
+			
+			String text;
+			
 			if (g.isItemPickup()) {
 				Item item = g.getItem();
 				
+				text = "You picked up item " + item.getId();
 				// TODO: show a dialog box and alter state of the player's inventory
 				System.out.println ("You picked up item " + item);
 			}
 			else {
+				text = g.getInteractionText();
 				// TODO: show a dialog box
 				System.out.println (g.getInteractionText());
 			}
+			
+			BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/nerd.fnt"), false);
+			dialogLabel = new Label(text.subSequence(0, text.length()), new LabelStyle(font, Color.BLACK));
+			dialogLabel.setWidth(380.0f);
+			dialogLabel.setHeight(108.0f);
+			dialogLabel.setWrap(true);
+			dialogLabel.setPosition(WIDTH / 2.0f - 190.0f, 15.0f);
+			dialogLabel.setAlignment(Align.left, Align.top);
+			stage.addActor(dialogLabel);
 		}
-		
 	}
 
 	@Override
