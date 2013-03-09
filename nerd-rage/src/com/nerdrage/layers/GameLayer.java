@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.nerdrage.levels.*;
+import com.nerdrage.objects.Item;
 import com.badlogic.gdx.Game;
 import com.nerdrage.screens.*;
 
@@ -36,11 +37,13 @@ public class GameLayer extends AbstractReceiverLayer {
 	private int positionX;
 	private int positionY;
 	
+	private enum Direction {LEFT, RIGHT, UP, DOWN};
+	private Direction currentPlayerDirection;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
 	public GameLayer(Game game) {
-
 		
 		this.game = game;
 		
@@ -84,6 +87,8 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 		level.setPosition(WIDTH / 2 - 32.0f - (positionX * 64.0f), HEIGHT / 2 - 32.0f - ((currentLevel.getHeight() - positionY - 1) * 64.0f));
 		
+		currentPlayerDirection = Direction.UP;
+		
 		stage.addActor(level);
 	}
 	
@@ -105,6 +110,8 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 			positionY--;
 		}
+
+		currentPlayerDirection = Direction.UP;
 	}
 
 	/**
@@ -123,6 +130,8 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 			positionY++;
 		}
+		
+		currentPlayerDirection = Direction.DOWN;
 	}
 
 	/**
@@ -141,6 +150,8 @@ public class GameLayer extends AbstractReceiverLayer {
 			
 			positionX--;
 		}
+		
+		currentPlayerDirection = Direction.LEFT;
 	}
 
 	/**
@@ -158,10 +169,47 @@ public class GameLayer extends AbstractReceiverLayer {
 			
 			positionX++;
 		}
+
+		currentPlayerDirection = Direction.RIGHT;
 	}
 
 	@Override
 	public void xPressed() {
+		
+		int x = positionX;
+		int y = positionY;
+		
+		switch (currentPlayerDirection) {
+			case LEFT:
+				x--;
+				break;
+			case RIGHT:
+				x++;
+				break;
+			case UP:
+				y--;
+				break;
+			case DOWN:
+				y++;
+				break;
+		}
+
+		char c = currentLevel.characterAtGridPosition(x, y);
+		GridBlock g = currentLevel.getGridBlockForCharacter(c);
+		
+		if (g != null) {
+			if (g.isItemPickup()) {
+				Item item = g.getItem();
+				
+				// TODO: show a dialog box and alter state of the player's inventory
+				System.out.println ("You picked up item " + item);
+			}
+			else {
+				// TODO: show a dialog box
+				System.out.println (g.getInteractionText());
+			}
+		}
+		
 	}
 
 	@Override
