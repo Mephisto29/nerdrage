@@ -2,6 +2,7 @@ package com.nerdrage.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.nerdrage.Player;
 import com.nerdrage.layers.*;
 
 /**
@@ -18,10 +19,14 @@ public class GameScreen extends AbstractScreen {
 	private GameLayer gameLayer;
 	private CombatLayer combatLayer;
 	private ControlLayer controlLayer;
+	private Player player;
 	
 	public GameScreen () {
+		
+		player = new Player();
+		
 		gameLayer = new GameLayer();
-		combatLayer = new CombatLayer();
+		combatLayer = new CombatLayer(player);
 		controlLayer = new ControlLayer();
 		
 		controlLayer.setReceiver (combatLayer);
