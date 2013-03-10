@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.nerdrage.actors.Enemy;
-import com.nerdrage.actors.Player;
+import com.nerdrage.Enemy;
+import com.nerdrage.Player;
 
 public class CombatLayer extends AbstractReceiverLayer {
 	
@@ -50,15 +50,46 @@ public class CombatLayer extends AbstractReceiverLayer {
 	private Sprite enemyHealthSprite10;
 	
 	private BitmapFont font;
+	
+	private boolean attackMenu = false;
+	private boolean itemMenu = false;
+	
+	private boolean playerTurn = true;
+	private boolean specialAttack = false;
+	private boolean usedFood = false;
+	private boolean ranAway = false;
+	private boolean run = false;
+	private boolean usewater = false;
+	
+	private boolean confused = false;
+	
+	private boolean playerstep = false;
+	private boolean step1 = false;
+	private boolean step2 = false;
+	private boolean step3 = false;
+	
 	private int position = 0;
+	private int confusedAttack = 33;
+	private int runawaychance = 33;
+	private double confuse;
+	private double runable;
+	
+	String enemyAttack = "";
+	int playerdamage = 0;
+	int enemydamage = 0;
+	int experience = 0;
+	
 
 	
-	public CombatLayer () {
+	public CombatLayer (Player player1) {
 		
 		batch = new SpriteBatch ();
 		
+		player = player1;
 		enemy = new Enemy();
-		player = new Player();
+		enemy.setLevel(player.getLevel());
+		experience = enemy.getExperience();
+		
 		
 		battleScreenTexture = new Texture (Gdx.files.internal("data/Battlescreen.png"));
 		battleScreenSprite = new Sprite (battleScreenTexture);
@@ -130,7 +161,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 	
 		batch.begin();
 		battleScreenSprite.draw(batch,1f);
-		battleSelectionBoxSprite.draw(batch,1f);
+		if(playerTurn)
+			battleSelectionBoxSprite.draw(batch,1f);
 		
 		if(player.getHealth() > 0)
 		{
@@ -214,15 +246,121 @@ public class CombatLayer extends AbstractReceiverLayer {
 				enemyHealthSprite10.draw(batch,1f);
 			}	
 		}
+		
+		if(playerTurn)
+		{
+			if(attackMenu)
+			{
+				font.draw(batch, "Normal", 650, 130);
+				font.draw(batch, "Special", 715, 130);
+				font.draw(batch, "Back", 780, 130);
+			}
+			else if(itemMenu)
+			{
+				font.draw(batch, "Water", 650, 130);
+				font.draw(batch, "Food", 715, 130);
+				font.draw(batch, "Back", 780, 130);
+			}
+			else
+			{
+				font.draw(batch, "Attack", 650, 130);
+				font.draw(batch, "Item", 715, 130);
+				font.draw(batch, "Run", 780, 130);
+			}
+		}
+		else if(playerstep)
+		{
+			if(specialAttack)
+			{
+				font.draw(batch, "You try to educate the Jock", 100, 130);
+				if(confused)
+					font.draw(batch, "The Jock is super confused", 100, 110);
+				else
+					font.draw(batch, "The Jock ignores you", 100, 110);
+			}
+			else if(run)
+				font.draw(batch, "You try to run from the Jock", 100, 130);
+			else if(usewater)
+			{
+				font.draw(batch, "You Throw water at the Jock", 100, 130);
+				font.draw(batch, "The Jock is more sober, he does less damage now", 100, 110);
+			}
+			else if(usedFood)
+			{}
+			else
+				font.draw(batch, "You attack and do " + playerdamage + " damage", 100, 130);
+		}
 		else
 		{
-			// CHANGE GAME STATE!!!
+			if(step1)
+			{
+				if(ranAway)
+				{
+					font.draw(batch, "You have successfully evaded the Jock", 100, 130);
+				}
+				else if (usedFood)
+				{
+					font.draw(batch, "You Trow food at the Jock", 100, 130);
+				}
+				else if(confused)
+				{
+					font.draw(batch, "The Jock is super confused", 100, 130);
+					font.draw(batch, "Jock uses " + enemyAttack, 100, 110);
+				}
+				else
+				{
+					font.draw(batch, "Jock uses " + enemyAttack, 100, 130);
+				}
+			}
+			else if (step2)
+			{
+				if(usedFood)
+				{
+					font.draw(batch, "The Jock Munches the food", 100, 130);
+				}
+				else if(confused)
+				{
+					if (confuse < confusedAttack)
+					{
+						font.draw(batch, "Jock hurts itself in its confusion", 100, 130);
+					}
+					else
+					{
+						if(enemyAttack.equals("FLEX!!!!!"))
+						{
+							font.draw(batch, "The Jock flexes his muscles! His damage is now doubled!!!!", 100, 130);
+						}
+						else	
+						{
+							font.draw(batch, "You recieve " + enemydamage + " points of damage", 100, 130);
+						}
+					}
+				}
+				else
+				{
+					if(enemyAttack.equals("FLEX!!!!!"))
+					{
+						font.draw(batch, "The Jock flexes his muscles! His damage is now doubled!!!!", 100, 130);
+					}
+					else	
+					{
+						font.draw(batch, "You recieve " + enemydamage + " points of damage", 100, 130);
+					}
+				}
+			}
+			
+			if(step3)
+			{
+				if(enemy.getHealth() <= 0)
+				{
+					font.draw(batch, "Congradulations you defeated a Jock", 100, 130);
+					font.draw(batch, "You recieve "+ experience +" points of experience", 100, 110);
+				}
+				else
+					font.draw(batch, "GG!!  You have been pummeled to death", 100, 130);
+			}
 		}
 		
-		
-		font.draw(batch, "Attack", 650, 130);
-		font.draw(batch, "Item", 715, 130);
-		font.draw(batch, "Run", 780, 130);
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
@@ -230,8 +368,175 @@ public class CombatLayer extends AbstractReceiverLayer {
 	}
 	
 	@Override
-	public void upPressed() {
-		// TODO Auto-generated method stub
+	public void upPressed() 
+	{
+		if(step3)
+		{
+			if(player.getHealth() > 0)
+				player.setExperience(enemy.getExperience());
+			playerTurn = false;
+			// change state
+		}
+		
+		if(playerTurn)
+		{
+			playerdamage = player.getDamage();
+			enemydamage = enemy.getDamage();
+			enemyAttack = enemy.getAttack();
+			if(attackMenu == true)
+			{
+				if(position == 0)
+				{
+					System.out.println("ATTACK");
+					enemy.setHealth(player.getDamage());
+					playerTurn = false;
+					playerstep = true;
+					
+					if(enemy.getHealth() <= 0)
+					{
+						System.out.println("VICTORY");
+						System.out.println("YOU HAVE WON");
+					}
+					
+				}
+				else if (position == 1)
+				{
+					System.out.println("USE SPECIAL ATTACK");
+					confuse = (Math.random() * 100);
+					if (confuse < 50)
+					{
+						confused = true;
+					}
+					playerTurn = false;
+					specialAttack = true;
+					playerstep = true;
+				}
+				else if (position == 2)
+				{
+					System.out.println("BACK TO PREVIOUS MENU");
+				}
+				attackMenu = false;
+			}
+			else if(itemMenu == true)
+			{
+				if(position == 0)
+				{
+					System.out.println("USE WATER");
+					enemy.setDamage();
+					playerTurn = false;
+					playerstep = true;
+					usewater = true;
+					
+				}
+				else if (position == 1)
+				{
+					System.out.println("USE FOOD");
+					runawaychance = runawaychance + 33;
+					playerTurn = false;
+					usedFood = true;
+				}
+				else if (position == 2)
+				{
+					
+				}
+				itemMenu = false;
+			}
+			else
+			{
+				if(position == 0)
+				{
+					System.out.println("ATTACK MENU");
+					attackMenu = true;
+				}
+				else if (position == 1)
+				{
+					System.out.println("ITEM MENU");
+					itemMenu = true;
+				}
+				else if (position == 2)
+				{
+					System.out.println("RUNNNNNNN!!!!!!");
+					run = true;
+					runable = (Math.random() * 100);
+					if (runable < runawaychance)
+					{
+						ranAway = true;
+					}
+					playerTurn = false;
+					playerstep = true;
+				}
+			}
+			if(playerTurn== false)
+				step1 = true;
+		}
+		
+		else
+		{
+			if(playerstep)
+			{
+				playerstep = false;
+				run = false;
+				specialAttack = false;
+				usewater = false;
+				step1 = true;
+				if(confused)
+				{
+					confuse = Math.random()*100;
+				}
+			}
+			else if(step1)
+			{
+				if(ranAway)
+				{
+					step1 = false;
+					// CHANGE SATE
+				}
+				else
+				{
+					step1 = false;
+					step2 = true;
+				}
+			}
+			else if (step2)
+			{
+
+				step2 = false;
+				playerTurn = true;
+				
+				if(confused)
+				{
+					if (confuse < confusedAttack)
+					{
+						enemy.setHealth(enemy.getDamage());
+					}
+					else
+					{
+						if(enemyAttack.equals("FLEX!!!!!"))
+						{}
+						else
+							player.setHealth(enemy.getDamage());
+					}
+				}
+				else if(!usedFood )	
+				{
+					if(enemyAttack.equals("FLEX!!!!!"))
+					{}
+					else
+						player.setHealth(enemy.getDamage());
+					
+					usedFood = false;
+				}
+					
+				else
+					usedFood = false;
+				
+				if(player.getHealth() <= 0 || enemy.getHealth() <=0)
+				{
+					step3 = true;
+				}
+			}
+		}
+		
 		
 	}
 
@@ -261,8 +566,6 @@ public class CombatLayer extends AbstractReceiverLayer {
 	@Override
 	public void rightPressed() 
 	{
-		System.out.println("ATTACK");
-		enemy.setHealth(10);
 		if(position == 0)
 		{
 			battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f + 194.0f , 105f);
@@ -298,13 +601,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void yPressed() {
-		System.out.println("ATTACK");
 		
 	}
 
 	@Override
 	public void startPressed() {
-		System.out.println("ATTACK");
 		
 	}
 
