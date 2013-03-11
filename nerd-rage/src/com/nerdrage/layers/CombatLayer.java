@@ -154,7 +154,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 	}
 	
 	@Override
-	public void draw() {
+	public void draw(float delta) {
 		
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
@@ -395,7 +395,6 @@ public class CombatLayer extends AbstractReceiverLayer {
 					if(enemy.getHealth() <= 0)
 					{
 						System.out.println("VICTORY");
-						draw();
 						System.out.println("YOU HAVE WON");
 					}
 					

@@ -1,9 +1,11 @@
 package com.nerdrage.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.nerdrage.Player;
 import com.nerdrage.layers.*;
+import com.nerdrage.*;
 
 /**
  * This will be the main screen in which the game takes place. The game screen will display a
@@ -19,21 +21,32 @@ public class GameScreen extends AbstractScreen {
 	private GameLayer gameLayer;
 	private CombatLayer combatLayer;
 	private ControlLayer controlLayer;
-	private Player player;
-	
-	public GameScreen () {
+	private Game game;
+	public Player player;
+	private boolean inCombat = true;
+
+	public GameScreen (Game game) {
 		
 		player = new Player();
 		
-		gameLayer = new GameLayer();
+		gameLayer = new GameLayer(game, player);
 		combatLayer = new CombatLayer(player);
-		controlLayer = new ControlLayer();
+		inCombat = false;
+
+		controlLayer = new ControlLayer(player);
+		controlLayer.setReceiver (gameLayer);
+		controlLayer.setStartButtonVisible(true);
 		
-		controlLayer.setReceiver (combatLayer);
+		gameLayer.setControlLayer(controlLayer);
 	}
 	
 	@Override
 	public void render(float delta) {
+		
+		// log frame rate
+		if (NerdRageGame.DEBUG) {
+			//NerdRageGame.fpsLogger.log();
+		}
 		
 		if (Gdx.input.isTouched()) {
 			// pass the input on to the control layer
@@ -43,8 +56,14 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		combatLayer.draw();
-		controlLayer.draw();
+		if (inCombat) {
+			combatLayer.draw(delta);
+		}
+		else {
+			gameLayer.draw(delta);
+		}
+		
+		controlLayer.draw(delta);
 	}
 	
 	@Override

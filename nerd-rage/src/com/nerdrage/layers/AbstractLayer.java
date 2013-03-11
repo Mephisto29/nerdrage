@@ -11,6 +11,6 @@ public abstract class AbstractLayer {
 	 * This should involve positioning components and drawing them as well as controlling
 	 * the transparency of the layer.
 	 */
-	public abstract void draw ();
+	public abstract void draw (float delta);
 
 }

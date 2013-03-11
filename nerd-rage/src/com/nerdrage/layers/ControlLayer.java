@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
+import com.nerdrage.Player;
 
 /**
  * This layer will be used to display the control overlay. It will accept user input and
@@ -17,6 +18,16 @@ import com.badlogic.gdx.graphics.Texture;
  * redirect the control layer's commands to another layer. 
  */
 public class ControlLayer extends AbstractLayer {
+	
+	/**
+	 * Static constants for use in the control screen
+	 */
+	public static final int THIRST_METER_BARS = 10;
+	public static final int HUNGER_METER_BARS = 10;
+	public static final float THIRST_START_POS_X = 50.0f;
+	public static final float THIRST_START_POS_Y = 443.0f;
+	public static final float HUNGER_START_POS_X = 734.0f;
+	public static final float HUNGER_START_POS_Y = 443.0f;
 
 	/**
 	 * A private inner class which will handle the resetting of the input
@@ -61,6 +72,20 @@ public class ControlLayer extends AbstractLayer {
 
 	private boolean[] available;
 	
+	private boolean startButtonVisible;
+	
+	private Texture meterTexture;
+	private Sprite[] thirstMeter;
+	private Sprite[] hungerMeter; 
+	
+	private Texture hungerIconTexture;
+	private Sprite hungerIcon;
+
+	private Texture thirstIconTexture;
+	private Sprite thirstIcon;
+	
+	private Player player;
+	
 	/**
 	 * An enum to simplify the understanding of the code to check the state of the buttons
 	 */
@@ -78,17 +103,20 @@ public class ControlLayer extends AbstractLayer {
 	/**
 	 * Public variables to control rate at which input is received
 	 */
-	public static final long RECEIVER_DELAY = 500;
+	public static final long RECEIVER_DELAY = 300;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
-	public ControlLayer() {
+	public ControlLayer(Player player) {
+		
+		this.player = player;
+		
 		batch = new SpriteBatch ();
 		receiver = null;
 		
 		// create texture assets
-		dPadTexture = new Texture (Gdx.files.internal("data/DPad.png"));
+		dPadTexture = new Texture (Gdx.files.internal("ui/DPadLarge.png"));
 		dPadSprite = new Sprite (dPadTexture);
 		dPadSprite.setPosition(5.0f, 5.0f);
 		
@@ -96,21 +124,51 @@ public class ControlLayer extends AbstractLayer {
 		xyButtonSprite = new Sprite (xyButtonTexture);
 		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 133.0f, 5.0f);
 		
-		startButtonTexture = new Texture (Gdx.files.internal("data/StartButton.png"));
+		startButtonTexture = new Texture (Gdx.files.internal("ui/StartButtonLarge.png"));
 		startButtonSprite = new Sprite (startButtonTexture);
-		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 32.0f , 5.0f);
+		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 64.0f , 5.0f);
 		
-		topBarTexture = new Texture (Gdx.files.internal("data/TopBarRepeat.png"));
+		topBarTexture = new Texture (Gdx.files.internal("ui/TopBarRepeat1.png"));
 		topBarTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		topBarSprite = new Sprite (topBarTexture);
 		topBarSprite.setPosition(0.0f, Gdx.graphics.getHeight() - 64.0f);
 		topBarSprite.setSize(Gdx.graphics.getWidth(), 64.0f);
+		
+		meterTexture = new Texture(Gdx.files.internal("ui/MeterBar.png"));
+		
+		thirstMeter = new Sprite[THIRST_METER_BARS];
+		hungerMeter = new Sprite[HUNGER_METER_BARS];
+		
+		for (int i =  0; i < THIRST_METER_BARS; i++) {
+			Sprite s = new Sprite(meterTexture);
+			s.setSize(16.0f, 32.0f);
+			s.setPosition(THIRST_START_POS_X + (i * 16.0f), THIRST_START_POS_Y);
+			thirstMeter[i] = s;
+		}
+		
+		for (int i =  0; i < HUNGER_METER_BARS; i++) {
+			Sprite s = new Sprite(meterTexture);
+			s.setSize(16.0f, 32.0f);
+			s.setPosition(HUNGER_START_POS_X - (i * 16.0f), HUNGER_START_POS_Y);
+			hungerMeter[i] = s;
+		}
+		
+		hungerIconTexture = new Texture(Gdx.files.internal("ui/Hunger.png"));
+		hungerIcon = new Sprite(hungerIconTexture);
+		hungerIcon.setPosition(HUNGER_START_POS_X + 21.0f, HUNGER_START_POS_Y);
+		
+		thirstIconTexture = new Texture(Gdx.files.internal("ui/Thirst.png"));
+		thirstIcon = new Sprite(thirstIconTexture);
+		thirstIcon.setPosition(THIRST_START_POS_X - 37.0f, THIRST_START_POS_Y);
+		
 		
 		// initialise availability array
 		available = new boolean[7];
 		for (int i = 0; i < 7; i++) {
 			available[i] = true;
 		}
+		
+		startButtonVisible = true;
 	}
 	
 	/**
@@ -118,16 +176,31 @@ public class ControlLayer extends AbstractLayer {
 	 * transparent and will have button controls for the user to interact with
 	 */
 	@Override
-	public void draw() {
+	public void draw(float delta) {
 		
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	
 		batch.begin();
+		
 		dPadSprite.draw(batch, 0.6f);
 		xyButtonSprite.draw(batch, 0.6f);
-		startButtonSprite.draw(batch, 0.6f);
-		topBarSprite.draw(batch, 0.6f);
+		topBarSprite.draw(batch, 0.8f);
+		
+		if (startButtonVisible) {
+			startButtonSprite.draw(batch, 0.6f);
+		}
+		
+		for (int i =  0; i < (player.getThirst() / THIRST_METER_BARS); i++) {
+			thirstMeter[i].draw(batch, 0.8f);
+		}
+		
+		for (int i =  0; i < (player.getHunger() / HUNGER_METER_BARS); i++) {
+			hungerMeter[i].draw(batch, 0.8f);
+		}
+		
+		hungerIcon.draw(batch, 0.8f);
+		thirstIcon.draw(batch, 0.8f);
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
@@ -143,6 +216,15 @@ public class ControlLayer extends AbstractLayer {
 	}
 	
 	/**
+	 * Method to choose whether or not to display the start button
+	 * 
+	 * @param visible
+	 */
+	public void setStartButtonVisible (boolean visible) {
+		startButtonVisible = visible;
+	}
+	
+	/**
 	 * Method to handle touch input from the user. It will go through the possible input areas of the 
 	 * screen and if any are being pressed the relevant message will be sent to the receiver
 	 * 
@@ -150,34 +232,33 @@ public class ControlLayer extends AbstractLayer {
 	 * @param y The y coordinate of the touch on the screen
 	 */
 	public void handleTouch (int x, int y) {
-		
-		// TODO: Ensure that this works on the android device
+	
 		Button button = Button.NONE;
 		
 		// only process touches in the bottom strip of the screen
-		if (y <= 133 && y > 5) {
+		if (y <= 197 && y > 5) {
 			
 			// we then segment according to x values and test the possible buttons in the current x range
-			if (x < 46 && x >= 5) {
-				if (y >= 50 && y <= 90) {
+			if (x < 69 && x >= 5) {
+				if (y >= 69 && y <= 133) {
 					button = Button.LEFT;
 				}
 			}
-			else if (x < 91) {
-				if (y >= 90) {
+			else if (x < 133) {
+				if (y >= 133) {
 					button = Button.UP;
 				}
-				else if (y <= 50) {
+				else if (y <= 69) {
 					button = Button.DOWN;
 				}
 			}
-			else if (x < 131) {
-				if (y >= 50 && y <= 90) {
+			else if (x <= 197) {
+				if (y >= 69 && y <= 133) {
 					button = Button.RIGHT;
 				}	
 			}
-			else if (x >= 368 && x < 430) {
-				if (y < 40) {
+			else if (x >= 336 && x < 464) {
+				if (y < 69) {
 					button = Button.START;
 				}
 			}
@@ -220,7 +301,9 @@ public class ControlLayer extends AbstractLayer {
 							break;
 						}
 						case START: {
-							receiver.startPressed();
+							if (startButtonVisible) {
+								receiver.startPressed();
+							}
 							break;
 						}
 						case Y: {
