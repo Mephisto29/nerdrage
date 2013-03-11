@@ -3,6 +3,7 @@ package com.nerdrage.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.nerdrage.Player;
 import com.nerdrage.layers.*;
 import com.nerdrage.*;
 
@@ -21,13 +22,22 @@ public class GameScreen extends AbstractScreen {
 	private CombatLayer combatLayer;
 	private ControlLayer controlLayer;
 	private Game game;
-	
+	public Player player;
+	private boolean inCombat = false;
+
 	public GameScreen (Game game) {
-		gameLayer = new GameLayer(game);
-		controlLayer = new ControlLayer();
 		
-		controlLayer.setReceiver (gameLayer);
-		controlLayer.setStartButtonVisible(false);
+		player = new Player();
+		
+		gameLayer = new GameLayer(game, player);
+		combatLayer = new CombatLayer(player);
+		inCombat = true;
+
+		controlLayer = new ControlLayer(player);
+		controlLayer.setReceiver (combatLayer);
+		controlLayer.setStartButtonVisible(true);
+		
+		gameLayer.setControlLayer(controlLayer);
 	}
 	
 	@Override
@@ -46,8 +56,14 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		combatLayer.draw();
-		controlLayer.draw();
+		if (inCombat) {
+			combatLayer.draw(delta);
+		}
+		else {
+			gameLayer.draw(delta);
+		}
+		
+		controlLayer.draw(delta);
 	}
 	
 	@Override

@@ -3,7 +3,11 @@
 1cc000a001
 1cc0000001
 1cc0000001
+<<<<<<< HEAD
 1cc00000d1
+=======
+10000000d1
+>>>>>>> 9d36c513bd8ebc669416b5d60cdd2ebc3bef1af5
 10000000d1
 10000000d1
 10000000b1
@@ -13,4 +17,8 @@
 a:{3}[id1;0.4],[id2;0.4],[id3;0.2]
 b:{2}[id1;0.4],[id4;0.6]
 c:"Ah my trusty bed!"
+<<<<<<< HEAD
 d:"Could it be a desk?"
+=======
+d:"Could it be a desk? I haven't seen this in SO long..."
+>>>>>>> 9d36c513bd8ebc669416b5d60cdd2ebc3bef1af5
