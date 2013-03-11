@@ -286,7 +286,6 @@ public class ControlLayer extends AbstractLayer {
 					id -= 3;
 				}
 				
-				
 				// check that the button can be pressed again
 				if (available [id]) {
 					
