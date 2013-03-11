@@ -322,7 +322,7 @@ public class ControlLayer extends AbstractLayer {
 						}
 					}
 					
-					available[button.id] = false;
+					available[id] = false;
 					
 					// reset the availability of the button after the specified time
 					InputDelayResetter resetter = new InputDelayResetter(id);
