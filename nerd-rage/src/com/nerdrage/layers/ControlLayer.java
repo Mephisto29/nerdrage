@@ -282,6 +282,9 @@ public class ControlLayer extends AbstractLayer {
 				if (id >= 0 && id <= 3) {
 					id = 0;
 				}
+				else {
+					id -= 3;
+				}
 				
 				
 				// check that the button can be pressed again
