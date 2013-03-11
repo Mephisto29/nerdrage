@@ -398,7 +398,7 @@ public class GameLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void startPressed() {
-		game.setScreen(new ResumeMainMenuScreen(game));
+		//game.setScreen(new ResumeMainMenuScreen(game));
 	}
 
 }

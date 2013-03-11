@@ -116,7 +116,7 @@ public class ControlLayer extends AbstractLayer {
 		receiver = null;
 		
 		// create texture assets
-		dPadTexture = new Texture (Gdx.files.internal("data/DPad.png"));
+		dPadTexture = new Texture (Gdx.files.internal("ui/DPadLarge.png"));
 		dPadSprite = new Sprite (dPadTexture);
 		dPadSprite.setPosition(5.0f, 5.0f);
 		
@@ -124,9 +124,9 @@ public class ControlLayer extends AbstractLayer {
 		xyButtonSprite = new Sprite (xyButtonTexture);
 		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 133.0f, 5.0f);
 		
-		startButtonTexture = new Texture (Gdx.files.internal("data/StartButton.png"));
+		startButtonTexture = new Texture (Gdx.files.internal("ui/StartButtonLarge.png"));
 		startButtonSprite = new Sprite (startButtonTexture);
-		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 32.0f , 5.0f);
+		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 64.0f , 5.0f);
 		
 		topBarTexture = new Texture (Gdx.files.internal("ui/TopBarRepeat1.png"));
 		topBarTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
@@ -236,29 +236,29 @@ public class ControlLayer extends AbstractLayer {
 		Button button = Button.NONE;
 		
 		// only process touches in the bottom strip of the screen
-		if (y <= 133 && y > 5) {
+		if (y <= 197 && y > 5) {
 			
 			// we then segment according to x values and test the possible buttons in the current x range
-			if (x < 46 && x >= 5) {
-				if (y >= 50 && y <= 90) {
+			if (x < 69 && x >= 5) {
+				if (y >= 69 && y <= 133) {
 					button = Button.LEFT;
 				}
 			}
-			else if (x < 91) {
-				if (y >= 90) {
+			else if (x < 133) {
+				if (y >= 133) {
 					button = Button.UP;
 				}
-				else if (y <= 50) {
+				else if (y <= 69) {
 					button = Button.DOWN;
 				}
 			}
-			else if (x < 131) {
-				if (y >= 50 && y <= 90) {
+			else if (x <= 197) {
+				if (y >= 69 && y <= 133) {
 					button = Button.RIGHT;
 				}	
 			}
-			else if (x >= 368 && x < 430) {
-				if (y < 40) {
+			else if (x >= 336 && x < 464) {
+				if (y < 69) {
 					button = Button.START;
 				}
 			}
