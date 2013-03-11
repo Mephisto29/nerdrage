@@ -1,14 +1,19 @@
 package com.nerdrage.layers;
 
+import javax.sound.midi.Sequence;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -23,13 +28,14 @@ public class GameLayer extends AbstractReceiverLayer {
 	/**
 	 * Private constants for use in the game
 	 */
-	public static final float WALK_ANIMATION_LENGTH = 0.3f;
+	public static final float WALK_ANIMATION_LENGTH = 0.25f;
 	
 	/**
 	 * Private instance variables
 	 */
 	private Level currentLevel;
 	private Game game;
+	private ControlLayer controlLayer;
 	
 	private static int WIDTH = 800;
 	private static int HEIGHT = 480;
@@ -47,6 +53,9 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private Label dialogLabel;
 	
+	private boolean dialogVisible;
+	private boolean removingDialog;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
@@ -62,6 +71,18 @@ public class GameLayer extends AbstractReceiverLayer {
 		character = new Image(nerd);
 		character.setPosition(WIDTH / 2 - 32.0f, HEIGHT / 2 - 32.0f);
 		stage.addActor(character);
+		
+		dialogVisible = false;
+		removingDialog = false;
+	}
+	
+	/**
+	 * A method to set a reference to the control layer which is in use
+	 * 
+	 * @param layer The control layer sending messages to this game layer
+	 */
+	public void setControlLayer (ControlLayer layer) {
+		this.controlLayer = layer;
 	}
 	
 	/**
@@ -107,18 +128,22 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void upPressed() {
 		
-		// query the block above
-		if (currentLevel.characterAtGridPosition(positionX, positionY - 1) == '0') {
+		if (! dialogVisible) {
 		
-			MoveByAction action = new MoveByAction();
-			action.setAmountY(-64.0f);
-			action.setDuration(WALK_ANIMATION_LENGTH);
-			level.addAction(action);
-		
-			positionY--;
+			// query the block above
+			if (currentLevel.characterAtGridPosition(positionX, positionY - 1) == '0') {
+			
+				MoveByAction action = new MoveByAction();
+				action.setAmountY(-64.0f);
+				action.setDuration(WALK_ANIMATION_LENGTH);
+				level.addAction(action);
+			
+				positionY--;
+			}
+	
+			currentPlayerDirection = Direction.UP;
+			
 		}
-
-		currentPlayerDirection = Direction.UP;
 	}
 
 	/**
@@ -127,38 +152,42 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void downPressed() {
 		
-		// query the block below
-		if (currentLevel.characterAtGridPosition(positionX, positionY + 1) == '0') {
+		if (! dialogVisible) {
+			// query the block below
+			if (currentLevel.characterAtGridPosition(positionX, positionY + 1) == '0') {
+				
+				MoveByAction action = new MoveByAction();
+				action.setAmountY(64.0f);
+				action.setDuration(WALK_ANIMATION_LENGTH);
+				level.addAction(action);
 			
-			MoveByAction action = new MoveByAction();
-			action.setAmountY(64.0f);
-			action.setDuration(WALK_ANIMATION_LENGTH);
-			level.addAction(action);
-		
-			positionY++;
+				positionY++;
+			}
+			
+			currentPlayerDirection = Direction.DOWN;
 		}
-		
-		currentPlayerDirection = Direction.DOWN;
 	}
-
+	
 	/**
 	 * Method to handle the pressing of the left key
 	 */
 	@Override
 	public void leftPressed() {
 		
-		// query the block to the left
-		if (currentLevel.characterAtGridPosition(positionX - 1, positionY) == '0') {
-		
-			MoveByAction action = new MoveByAction();
-			action.setAmountX(64.0f);
-			action.setDuration(WALK_ANIMATION_LENGTH);
-			level.addAction(action);
+		if (! dialogVisible) {
+			// query the block to the left
+			if (currentLevel.characterAtGridPosition(positionX - 1, positionY) == '0') {
 			
-			positionX--;
+				MoveByAction action = new MoveByAction();
+				action.setAmountX(64.0f);
+				action.setDuration(WALK_ANIMATION_LENGTH);
+				level.addAction(action);
+				
+				positionX--;
+			}
+			
+			currentPlayerDirection = Direction.LEFT;
 		}
-		
-		currentPlayerDirection = Direction.LEFT;
 	}
 
 	/**
@@ -166,79 +195,166 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void rightPressed() {
-		// query the block to the left
-		if (currentLevel.characterAtGridPosition(positionX + 1, positionY) == '0') {
-			
-			MoveByAction action = new MoveByAction();
-			action.setAmountX(-64.0f);
-			action.setDuration(WALK_ANIMATION_LENGTH);
-			level.addAction(action);
-			
-			positionX++;
-		}
 
-		currentPlayerDirection = Direction.RIGHT;
+		if (! dialogVisible) {
+			// query the block to the left
+			if (currentLevel.characterAtGridPosition(positionX + 1, positionY) == '0') {
+				
+				MoveByAction action = new MoveByAction();
+				action.setAmountX(-64.0f);
+				action.setDuration(WALK_ANIMATION_LENGTH);
+				level.addAction(action);
+				
+				positionX++;
+			}
+	
+			currentPlayerDirection = Direction.RIGHT;
+		}
 	}
 
 	@Override
 	public void xPressed() {
 		
-		int x = positionX;
-		int y = positionY;
+		if (! dialogVisible) {
 		
-		switch (currentPlayerDirection) {
-			case LEFT:
-				x--;
-				break;
-			case RIGHT:
-				x++;
-				break;
-			case UP:
-				y--;
-				break;
-			case DOWN:
-				y++;
-				break;
-		}
-
-		char c = currentLevel.characterAtGridPosition(x, y);
-		GridBlock g = currentLevel.getGridBlockForCharacter(c);
-		
-		if (g != null) {
+			int x = positionX;
+			int y = positionY;
 			
-			Texture dialogTexture = new Texture(Gdx.files.internal("ui/DialogBox.png"));
-			dialogBox = new Image(dialogTexture);
-			dialogBox.setPosition(WIDTH / 2.0f - 256.0f, 5.0f);
-			stage.addActor(dialogBox);
+			switch (currentPlayerDirection) {
+				case LEFT:
+					x--;
+					break;
+				case RIGHT:
+					x++;
+					break;
+				case UP:
+					y--;
+					break;
+				case DOWN:
+					y++;
+					break;
+			}
+	
+			char c = currentLevel.characterAtGridPosition(x, y);
+			GridBlock g = currentLevel.getGridBlockForCharacter(c);
 			
-			String text;
-			
-			if (g.isItemPickup()) {
-				Item item = g.getItem();
+			if (g != null) {
 				
-				text = "You picked up item " + item.getId();
-				// TODO: show a dialog box and alter state of the player's inventory
-				System.out.println ("You picked up item " + item);
+				Texture dialogTexture = new Texture(Gdx.files.internal("ui/DialogBox.png"));
+				dialogBox = new Image(dialogTexture);
+				dialogBox.setPosition(WIDTH / 2.0f - 256.0f, -128.0f);
+				stage.addActor(dialogBox);
+				
+				String text;
+				
+				if (g.isItemPickup()) {
+					Item item = g.getItem();
+					
+					text = "You picked up item " + item.getId();
+					// TODO: alter state of the player's inventory
+				}
+				else {
+					text = g.getInteractionText();
+				}
+				
+				BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/nerd.fnt"), false);
+				dialogLabel = new Label(text.subSequence(0, text.length()), new LabelStyle(font, Color.BLACK));
+				dialogLabel.setWidth(390.0f);
+				dialogLabel.setHeight(108.0f);
+				dialogLabel.setWrap(true);
+				dialogLabel.setPosition(WIDTH / 2.0f - 195.0f, -118.0f);
+				dialogLabel.setAlignment(Align.top, Align.left);
+				stage.addActor(dialogLabel);
+				
+				MoveByAction action = new MoveByAction();
+				action.setAmountY(133.0f);
+				action.setDuration(0.2f);
+				
+				MoveByAction action1 = new MoveByAction();
+				action1.setAmountY(133.0f);
+				action1.setDuration(0.2f);
+				
+				dialogLabel.addAction(action);
+				dialogBox.addAction(action1);
+				
+				dialogVisible = true;
+				if (controlLayer != null) {
+					controlLayer.setStartButtonVisible(false);
+				}
 			}
-			else {
-				text = g.getInteractionText();
-				// TODO: show a dialog box
-				System.out.println (g.getInteractionText());
-			}
+		}
+		else {
 			
-			BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/nerd.fnt"), false);
-			dialogLabel = new Label(text.subSequence(0, text.length()), new LabelStyle(font, Color.BLACK));
-			dialogLabel.setWidth(380.0f);
-			dialogLabel.setHeight(108.0f);
-			dialogLabel.setWrap(true);
-			dialogLabel.setPosition(WIDTH / 2.0f - 190.0f, 15.0f);
-			dialogLabel.setAlignment(Align.left, Align.top);
-			stage.addActor(dialogLabel);
+			synchronized(this) {
+				
+				if (! removingDialog) {
+			
+					MoveByAction action = new MoveByAction();
+					action.setAmountY(-133.0f);
+					action.setDuration(0.2f);
+					
+					MoveByAction action1 = new MoveByAction();
+					action1.setAmountY(-133.0f);
+					action1.setDuration(0.2f);
+					
+					SequenceAction seq = new SequenceAction();
+					seq.addAction(action);
+					seq.addAction(new RunnableAction () {
+						public void run () {
+							synchronized (this) {
+								controlLayer.setStartButtonVisible(true);
+								dialogVisible = false;
+								removingDialog = false;
+							}
+						}
+					});
+					
+					dialogLabel.addAction(action1);
+					dialogBox.addAction(seq);
+					
+					removingDialog = true;
+				}
+				
+			}
 		}
 	}
 
 	@Override
 	public void yPressed() {
+		
+		if (dialogVisible) {
+
+			synchronized(this) {
+				
+				if (! removingDialog) {
+			
+					MoveByAction action = new MoveByAction();
+					action.setAmountY(-133.0f);
+					action.setDuration(0.2f);
+					
+					MoveByAction action1 = new MoveByAction();
+					action1.setAmountY(-133.0f);
+					action1.setDuration(0.2f);
+					
+					SequenceAction seq = new SequenceAction();
+					seq.addAction(action);
+					seq.addAction(new RunnableAction () {
+						public void run () {
+							synchronized (this) {
+								controlLayer.setStartButtonVisible(true);
+								dialogVisible = false;
+								removingDialog = false;
+							}
+						}
+					});
+					
+					dialogLabel.addAction(action1);
+					dialogBox.addAction(seq);
+					
+					removingDialog = true;
+				}
+			}
+		}
 	}
 
 	@Override
