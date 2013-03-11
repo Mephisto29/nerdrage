@@ -163,8 +163,8 @@ public class ControlLayer extends AbstractLayer {
 		
 		
 		// initialise availability array
-		available = new boolean[7];
-		for (int i = 0; i < 7; i++) {
+		available = new boolean[4];
+		for (int i = 0; i < 4; i++) {
 			available[i] = true;
 		}
 		
@@ -279,8 +279,14 @@ public class ControlLayer extends AbstractLayer {
 			
 			synchronized (this) {
 				
+				int id = button.id;
+				if (id >= 0 && id <= 3) {
+					id = 0;
+				}
+				
+				
 				// check that the button can be pressed again
-				if (available [button.id]) {
+				if (available [id]) {
 					
 					// send a message to the receiver
 					switch (button) {
@@ -319,7 +325,7 @@ public class ControlLayer extends AbstractLayer {
 					available[button.id] = false;
 					
 					// reset the availability of the button after the specified time
-					InputDelayResetter resetter = new InputDelayResetter(button.id);
+					InputDelayResetter resetter = new InputDelayResetter(id);
 					ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 					executor.schedule(resetter, RECEIVER_DELAY, TimeUnit.MILLISECONDS);	
 				}
