@@ -1,26 +1,20 @@
 package com.nerdrage.layers;
 
-import javax.sound.midi.Sequence;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
-import com.nerdrage.levels.*;
-import com.nerdrage.objects.Item;
 import com.badlogic.gdx.Game;
+import com.nerdrage.Player;
+import com.nerdrage.levels.*;
+import com.nerdrage.objects.*;
 import com.nerdrage.screens.*;
 
 public class GameLayer extends AbstractReceiverLayer {
@@ -29,6 +23,9 @@ public class GameLayer extends AbstractReceiverLayer {
 	 * Private constants for use in the game
 	 */
 	public static final float WALK_ANIMATION_LENGTH = 0.25f;
+	public static final float DAY_LENGTH_SECONDS = 600.0f;
+	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
+	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	
 	/**
 	 * Private instance variables
@@ -56,12 +53,24 @@ public class GameLayer extends AbstractReceiverLayer {
 	private boolean dialogVisible;
 	private boolean removingDialog;
 	
+	private float time;
+	private int days;
+	
+	private float hungerDecreaseTime;
+	private float thirstDecreaseTime;
+	
+	private float hungerTime;
+	private float thirstTime;
+	
+	private Player player;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
-	public GameLayer(Game game) {
+	public GameLayer(Game game, Player player) {
 		
 		this.game = game;
+		this.player = player;
 		
 		stage = new Stage(WIDTH, HEIGHT, true);
 		
@@ -74,6 +83,15 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 		dialogVisible = false;
 		removingDialog = false;
+		
+		time = 0.0f;
+		days = 0;
+		
+		hungerDecreaseTime = DAY_LENGTH_SECONDS * DAYS_SURVIVED_WITHOUT_FOOD / 100.0f;
+		thirstDecreaseTime = DAY_LENGTH_SECONDS * DAYS_SURVIVED_WITHOUT_WATER / 100.0f;
+		
+		hungerTime = 0.0f;
+		thirstTime = 0.0f;
 	}
 	
 	/**
@@ -99,6 +117,27 @@ public class GameLayer extends AbstractReceiverLayer {
 
         // draw the actors
         stage.draw();
+        
+        time += delta;
+        thirstTime += delta;
+        hungerTime += delta;
+        
+        if (hungerTime / hungerDecreaseTime > 1) {
+        	// decrease player hunger
+        	hungerTime = hungerTime % hungerDecreaseTime;
+        	player.adjustHunger(-1.0f);
+        }
+        
+        if (thirstTime / thirstDecreaseTime > 1) {
+        	// decrease player thirst
+        	thirstTime = thirstTime % thirstDecreaseTime;
+        	player.adjustThirst(-1.0f);
+        }
+        
+        if ((time / DAY_LENGTH_SECONDS) > 1) {
+        	days++;
+        	time = time % DAY_LENGTH_SECONDS;
+        }
 	}
 	
 	

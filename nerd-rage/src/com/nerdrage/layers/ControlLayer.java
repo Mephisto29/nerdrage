@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
+import com.nerdrage.Player;
 
 /**
  * This layer will be used to display the control overlay. It will accept user input and
@@ -17,6 +18,16 @@ import com.badlogic.gdx.graphics.Texture;
  * redirect the control layer's commands to another layer. 
  */
 public class ControlLayer extends AbstractLayer {
+	
+	/**
+	 * Static constants for use in the control screen
+	 */
+	public static final int THIRST_METER_BARS = 10;
+	public static final int HUNGER_METER_BARS = 10;
+	public static final float THIRST_START_POS_X = 50.0f;
+	public static final float THIRST_START_POS_Y = 443.0f;
+	public static final float HUNGER_START_POS_X = 734.0f;
+	public static final float HUNGER_START_POS_Y = 443.0f;
 
 	/**
 	 * A private inner class which will handle the resetting of the input
@@ -63,6 +74,18 @@ public class ControlLayer extends AbstractLayer {
 	
 	private boolean startButtonVisible;
 	
+	private Texture meterTexture;
+	private Sprite[] thirstMeter;
+	private Sprite[] hungerMeter; 
+	
+	private Texture hungerIconTexture;
+	private Sprite hungerIcon;
+
+	private Texture thirstIconTexture;
+	private Sprite thirstIcon;
+	
+	private Player player;
+	
 	/**
 	 * An enum to simplify the understanding of the code to check the state of the buttons
 	 */
@@ -85,7 +108,10 @@ public class ControlLayer extends AbstractLayer {
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
-	public ControlLayer() {
+	public ControlLayer(Player player) {
+		
+		this.player = player;
+		
 		batch = new SpriteBatch ();
 		receiver = null;
 		
@@ -102,11 +128,39 @@ public class ControlLayer extends AbstractLayer {
 		startButtonSprite = new Sprite (startButtonTexture);
 		startButtonSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 32.0f , 5.0f);
 		
-		topBarTexture = new Texture (Gdx.files.internal("data/TopBarRepeat.png"));
+		topBarTexture = new Texture (Gdx.files.internal("ui/TopBarRepeat1.png"));
 		topBarTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		topBarSprite = new Sprite (topBarTexture);
 		topBarSprite.setPosition(0.0f, Gdx.graphics.getHeight() - 64.0f);
 		topBarSprite.setSize(Gdx.graphics.getWidth(), 64.0f);
+		
+		meterTexture = new Texture(Gdx.files.internal("ui/MeterBar.png"));
+		
+		thirstMeter = new Sprite[THIRST_METER_BARS];
+		hungerMeter = new Sprite[HUNGER_METER_BARS];
+		
+		for (int i =  0; i < THIRST_METER_BARS; i++) {
+			Sprite s = new Sprite(meterTexture);
+			s.setSize(16.0f, 32.0f);
+			s.setPosition(THIRST_START_POS_X + (i * 16.0f), THIRST_START_POS_Y);
+			thirstMeter[i] = s;
+		}
+		
+		for (int i =  0; i < HUNGER_METER_BARS; i++) {
+			Sprite s = new Sprite(meterTexture);
+			s.setSize(16.0f, 32.0f);
+			s.setPosition(HUNGER_START_POS_X - (i * 16.0f), HUNGER_START_POS_Y);
+			hungerMeter[i] = s;
+		}
+		
+		hungerIconTexture = new Texture(Gdx.files.internal("ui/Hunger.png"));
+		hungerIcon = new Sprite(hungerIconTexture);
+		hungerIcon.setPosition(HUNGER_START_POS_X + 21.0f, HUNGER_START_POS_Y);
+		
+		thirstIconTexture = new Texture(Gdx.files.internal("ui/Thirst.png"));
+		thirstIcon = new Sprite(thirstIconTexture);
+		thirstIcon.setPosition(THIRST_START_POS_X - 37.0f, THIRST_START_POS_Y);
+		
 		
 		// initialise availability array
 		available = new boolean[7];
@@ -131,12 +185,22 @@ public class ControlLayer extends AbstractLayer {
 		
 		dPadSprite.draw(batch, 0.6f);
 		xyButtonSprite.draw(batch, 0.6f);
-		topBarSprite.draw(batch, 0.6f);
+		topBarSprite.draw(batch, 0.8f);
 		
 		if (startButtonVisible) {
 			startButtonSprite.draw(batch, 0.6f);
 		}
 		
+		for (int i =  0; i < (player.getThirst() / THIRST_METER_BARS); i++) {
+			thirstMeter[i].draw(batch, 0.8f);
+		}
+		
+		for (int i =  0; i < (player.getHunger() / HUNGER_METER_BARS); i++) {
+			hungerMeter[i].draw(batch, 0.8f);
+		}
+		
+		hungerIcon.draw(batch, 0.8f);
+		thirstIcon.draw(batch, 0.8f);
 		batch.end();
 		
 		Gdx.gl.glDisable(GL10.GL_BLEND);
