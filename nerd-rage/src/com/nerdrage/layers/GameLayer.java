@@ -45,7 +45,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	private int positionX;
 	private int positionY;
 	
-	private enum Direction {LEFT, RIGHT, UP, DOWN};
+	public enum Direction {LEFT, RIGHT, UP, DOWN};
 	private Direction currentPlayerDirection;
 	
 	private Label dialogLabel;
