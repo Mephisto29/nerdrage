@@ -26,11 +26,14 @@ public class GameLayer extends AbstractReceiverLayer {
 	public static final float DAY_LENGTH_SECONDS = 600.0f;
 	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
+	public static final int STARTING_POSITION_X = 3;
+	public static final int STARTING_POSITION_Y = 11;
 	
 	/**
 	 * Private instance variables
 	 */
 	private Level currentLevel;
+	private Town town;
 	private Game game;
 	private ControlLayer controlLayer;
 	
@@ -41,6 +44,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	private Actor character;
 	private Actor level;
 	private Actor dialogBox;
+	private Actor townActor;
 	
 	private int positionX;
 	private int positionY;
@@ -64,6 +68,8 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private Player player;
 	
+	private boolean viewingTown;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
@@ -74,7 +80,13 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 		stage = new Stage(WIDTH, HEIGHT, true);
 		
+		town = new Town(Gdx.files.internal("levels/town.txt"), Gdx.files.internal("levels/images/town.png"));
+		townActor = town.getImage();
+		townActor.setVisible(false);
+		stage.addActor(townActor);
+		
 		loadLevel("house1");
+		town.setStartingHouse(STARTING_POSITION_X, STARTING_POSITION_Y, currentLevel);
 		
 		Texture nerd = new Texture(Gdx.files.internal("actors/nerd.png"));
 		character = new Image(nerd);
@@ -92,6 +104,8 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 		hungerTime = 0.0f;
 		thirstTime = 0.0f;
+		
+		viewingTown = false;
 	}
 	
 	/**
@@ -142,19 +156,16 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	
 	private void loadLevel (String levelName) {
-		
-		currentLevel = new Level(Gdx.files.internal("levels/" + levelName + ".txt"));
-		Texture levelTexture = new Texture(Gdx.files.internal("levels/images/" + levelName + ".png"));
-		
-		TextureRegion region = new TextureRegion(levelTexture, 0, 0, currentLevel.getWidth() * 64, currentLevel.getHeight() * 64);
-		level = new Image(region);
-		
+		currentLevel = new Level(Gdx.files.internal("levels/" + levelName + ".txt"), Gdx.files.internal("levels/images/" + levelName + ".png"));
+		currentPlayerDirection = Direction.UP;
+		currentLevel.setToHouse(town);
+		level = currentLevel.getImage();
+	
 		positionX = currentLevel.getStartingX();
 		positionY = currentLevel.getStartingY();
 		
-		level.setPosition(WIDTH / 2 - 32.0f - (positionX * 64.0f), HEIGHT / 2 - 32.0f - ((currentLevel.getHeight() - positionY - 1) * 64.0f));
-		
-		currentPlayerDirection = Direction.UP;
+		System.out.println (positionX);
+		System.out.println (positionY);
 		
 		stage.addActor(level);
 	}
@@ -166,6 +177,9 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void upPressed() {
+		
+
+		System.out.println (positionX + ", " + positionY);
 		
 		if (! dialogVisible) {
 		
@@ -179,6 +193,34 @@ public class GameLayer extends AbstractReceiverLayer {
 			
 				positionY--;
 			}
+			else if (currentLevel.characterAtGridPosition(positionX, positionY - 1) == 'X') {
+				
+				TransitionBlock t = currentLevel.getTransitionBlockAtPosition(positionX, positionY - 1);
+				System.out.println (t);
+				System.out.println (currentLevel.getClass());
+				Level nextLevel = t.getLevelToTransitionTo();
+				
+				stage.clear();
+				
+				if (currentLevel.isHouse()) {
+					currentLevel.unload();
+				}
+				else {
+					town.setStartingX(positionX);
+					town.setStartingY(positionY);
+					townActor.setVisible(false);
+				}
+				
+				currentLevel = nextLevel;
+				level = currentLevel.getImage();
+				level.setVisible(true);
+				stage.addActor(level);
+				stage.addActor(character);
+				
+				positionX = currentLevel.getStartingX();
+				positionY = currentLevel.getStartingY();
+				
+			}
 	
 			currentPlayerDirection = Direction.UP;
 			
@@ -191,6 +233,8 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void downPressed() {
 		
+		System.out.println (positionX + ", " + positionY);
+		
 		if (! dialogVisible) {
 			// query the block below
 			if (currentLevel.characterAtGridPosition(positionX, positionY + 1) == '0') {
@@ -202,6 +246,32 @@ public class GameLayer extends AbstractReceiverLayer {
 			
 				positionY++;
 			}
+			else if (currentLevel.characterAtGridPosition(positionX, positionY + 1) == 'X') {
+				
+				TransitionBlock t = currentLevel.getTransitionBlockAtPosition(positionX, positionY + 1);
+				Level nextLevel = t.getLevelToTransitionTo();
+				
+				stage.clear();
+				
+				if (currentLevel.isHouse()) {
+					currentLevel.unload();
+				}
+				else {
+					town.setStartingX(positionX);
+					town.setStartingY(positionY);
+					townActor.setVisible(false);
+				}
+				
+				currentLevel = nextLevel;
+				level = currentLevel.getImage();
+				level.setVisible(true);
+				stage.addActor(level);
+				stage.addActor(character);
+				
+				positionX = currentLevel.getStartingX();
+				positionY = currentLevel.getStartingY();
+				
+			}
 			
 			currentPlayerDirection = Direction.DOWN;
 		}
@@ -212,6 +282,9 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void leftPressed() {
+		
+
+		System.out.println (positionX + ", " + positionY);
 		
 		if (! dialogVisible) {
 			// query the block to the left
@@ -234,6 +307,9 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void rightPressed() {
+		
+
+		System.out.println (positionX + ", " + positionY);
 
 		if (! dialogVisible) {
 			// query the block to the left

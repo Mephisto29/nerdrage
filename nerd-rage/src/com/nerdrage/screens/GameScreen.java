@@ -34,8 +34,15 @@ public class GameScreen extends AbstractScreen {
 		inCombat = false;
 
 		controlLayer = new ControlLayer(player);
-		controlLayer.setReceiver (gameLayer);
-		controlLayer.setStartButtonVisible(true);
+		
+		if (inCombat) {
+			controlLayer.setReceiver (combatLayer);
+			controlLayer.setStartButtonVisible(false);
+		}
+		else {
+			controlLayer.setReceiver (gameLayer);
+			controlLayer.setStartButtonVisible(true);
+		}
 		
 		gameLayer.setControlLayer(controlLayer);
 	}
