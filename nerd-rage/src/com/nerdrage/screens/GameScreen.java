@@ -29,7 +29,7 @@ public class GameScreen extends AbstractScreen {
 		
 		player = new Player();
 		
-		gameLayer = new GameLayer(game, player);
+		gameLayer = new GameLayer(game, player, this);
 		combatLayer = new CombatLayer(player);
 		inCombat = false;
 
@@ -76,5 +76,12 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void show() {
 		
+	}
+	
+	public void engageCombat () {
+		inCombat = true;
+		combatLayer = new CombatLayer(player);
+		controlLayer.setReceiver (combatLayer);
+		controlLayer.setStartButtonVisible(false);
 	}
 }

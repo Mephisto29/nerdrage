@@ -270,7 +270,14 @@ public class Level {
 		return ! isTown;
 	}
 	
-	
+	/**
+	 * A method to get the probability of entering combat in the level
+	 * 
+	 * @return The probability of encountering a jock
+	 */
+	public float getCombatChance () {
+		return 0.0f;
+	}
 }
 
 

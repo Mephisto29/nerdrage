@@ -14,6 +14,7 @@ import com.badlogic.gdx.Game;
 import com.nerdrage.Player;
 import com.nerdrage.levels.*;
 import com.nerdrage.objects.*;
+import com.nerdrage.screens.*;
 
 public class GameLayer extends AbstractReceiverLayer {
 
@@ -34,6 +35,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	private Town town;
 	private Game game;
 	private ControlLayer controlLayer;
+	private GameScreen gameScreen;
 	
 	private static int WIDTH = 800;
 	private static int HEIGHT = 480;
@@ -71,10 +73,11 @@ public class GameLayer extends AbstractReceiverLayer {
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
-	public GameLayer(Game game, Player player) {
+	public GameLayer(Game game, Player player, GameScreen gameScreen) {
 		
 		this.game = game;
 		this.player = player;
+		this.gameScreen = gameScreen;
 		
 		stage = new Stage(WIDTH, HEIGHT, true);
 		
@@ -187,9 +190,27 @@ public class GameLayer extends AbstractReceiverLayer {
 				MoveByAction action = new MoveByAction();
 				action.setAmountY(-64.0f);
 				action.setDuration(WALK_ANIMATION_LENGTH);
-				level.addAction(action);
+				
+				SequenceAction seq = new SequenceAction();
+				seq.addAction(action);
+				seq.addAction(new RunnableAction () {
+					public void run () {
+						synchronized (this) {
+							
+							double r = Math.random();
+							
+							if (r < currentLevel.getCombatChance()) {
+								// engage combat
+								gameScreen.engageCombat();
+							}
+						}
+					}
+				});
+				
+				level.addAction(seq);
 			
 				positionY--;
+				
 			}
 			else if (currentLevel.characterAtGridPosition(positionX, positionY - 1) == 'X') {
 				

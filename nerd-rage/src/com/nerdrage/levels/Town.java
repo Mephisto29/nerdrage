@@ -81,4 +81,13 @@ public class Town extends Level {
 	public void setStartingY (int y) {
 		startingY = y;
 	}
+	
+	/**
+	 * A method to get the probability of entering combat in the level
+	 * 
+	 * @return The probability of encountering a jock
+	 */
+	public float getCombatChance () {
+		return 0.1f;
+	}
 }
