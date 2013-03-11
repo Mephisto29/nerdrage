@@ -1,6 +1,13 @@
 package com.nerdrage.layers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.nerdrage.levels.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.nerdrage.screens.MainMenuScreen;
+import com.nerdrage.screens.ResumeMainMenuScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -31,6 +38,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	/**
 	 * Private instance variables
 	 */
+	private SpriteBatch batch; 
 	private Level currentLevel;
 	private Town town;
 	private Game game;
@@ -49,7 +57,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	private int positionX;
 	private int positionY;
 	
-	private enum Direction {LEFT, RIGHT, UP, DOWN};
+	public enum Direction {LEFT, RIGHT, UP, DOWN};
 	private Direction currentPlayerDirection;
 	
 	private Label dialogLabel;
@@ -201,7 +209,7 @@ public class GameLayer extends AbstractReceiverLayer {
 							
 							if (r < currentLevel.getCombatChance()) {
 								// engage combat
-								gameScreen.engageCombat();
+								gameScreen.enterCombat();
 							}
 						}
 					}
@@ -551,6 +559,7 @@ public class GameLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void startPressed() {
+		System.out.println ("S");
 		//game.setScreen(new ResumeMainMenuScreen(game));
 	}
 

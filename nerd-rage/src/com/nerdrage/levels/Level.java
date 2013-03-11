@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.nerdrage.NerdRageGame;
-
 /**
  * Level class which will contain information about the area in which the user is. As well as
  * information about possible items which the user can pick up and interactions with world objects.
@@ -69,7 +68,6 @@ public class Level {
 				
 				for (int x = 0; x < width; x++)  {
 					levelGrid[y][x] = line.charAt(x);
-					
 					if (line.charAt(x) == 'X') {
 						startingX = x;
 						startingY = y - 1;
@@ -122,7 +120,6 @@ public class Level {
 			System.out.println ("Error reading in file");
 		}
 		
-		// for testing purposes
 		if (NerdRageGame.DEBUG) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++)  {
