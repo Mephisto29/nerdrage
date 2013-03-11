@@ -504,7 +504,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 				step2 = false;
 				playerTurn = true;
 				
-				if(confused)
+				if(confused && !usedFood)
 				{
 					if (confuse < confusedAttack)
 					{
