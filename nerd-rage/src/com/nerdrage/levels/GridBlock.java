@@ -16,6 +16,7 @@ public class GridBlock {
 	private float[] probabilities;
 	private String interactionText;
 	private boolean isItemPickup;
+	private boolean itemTaken;
 	
 	/**
 	 * Constructor for the grid block class. Creates a grid block with an array of the number of items 
@@ -40,6 +41,7 @@ public class GridBlock {
 		
 		this.interactionText = interactionText;
 		this.isItemPickup = isItemPickup;
+		itemTaken = false;
 	}
 	
 	/**
@@ -63,6 +65,9 @@ public class GridBlock {
 		double random = Math.random();
 		int itemNum = -1;
 		double sum = 0;
+
+		itemTaken = true;
+		interactionText = "Shoot! Just my luck! There's nothing left.";
 		
 		while (sum <= random && itemNum < probabilities.length) {
 			itemNum++;
@@ -82,6 +87,11 @@ public class GridBlock {
 	 * @return Whether or not the player can pick up items from the block.
 	 */
 	public boolean isItemPickup () {
+	
+		if (itemTaken) {
+			return false;
+		}
+		
 		return isItemPickup;
 	}
 

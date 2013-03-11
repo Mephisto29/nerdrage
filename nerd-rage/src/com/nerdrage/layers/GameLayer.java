@@ -3,7 +3,6 @@ package com.nerdrage.layers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.Game;
 import com.nerdrage.Player;
 import com.nerdrage.levels.*;
 import com.nerdrage.objects.*;
-import com.nerdrage.screens.*;
 
 public class GameLayer extends AbstractReceiverLayer {
 
@@ -297,9 +295,36 @@ public class GameLayer extends AbstractReceiverLayer {
 				
 				positionX--;
 			}
+			else if (currentLevel.characterAtGridPosition(positionX - 1, positionY) == 'X') {
+				
+				TransitionBlock t = currentLevel.getTransitionBlockAtPosition(positionX - 1, positionY);
+				Level nextLevel = t.getLevelToTransitionTo();
+				
+				stage.clear();
+				
+				if (currentLevel.isHouse()) {
+					currentLevel.unload();
+				}
+				else {
+					town.setStartingX(positionX);
+					town.setStartingY(positionY);
+					townActor.setVisible(false);
+				}
+				
+				currentLevel = nextLevel;
+				level = currentLevel.getImage();
+				level.setVisible(true);
+				stage.addActor(level);
+				stage.addActor(character);
+				
+				positionX = currentLevel.getStartingX();
+				positionY = currentLevel.getStartingY();
+				
+			}
 			
 			currentPlayerDirection = Direction.LEFT;
 		}
+		
 	}
 
 	/**
@@ -321,6 +346,32 @@ public class GameLayer extends AbstractReceiverLayer {
 				level.addAction(action);
 				
 				positionX++;
+			}
+			else if (currentLevel.characterAtGridPosition(positionX + 1, positionY) == 'X') {
+				
+				TransitionBlock t = currentLevel.getTransitionBlockAtPosition(positionX + 1, positionY);
+				Level nextLevel = t.getLevelToTransitionTo();
+				
+				stage.clear();
+				
+				if (currentLevel.isHouse()) {
+					currentLevel.unload();
+				}
+				else {
+					town.setStartingX(positionX);
+					town.setStartingY(positionY);
+					townActor.setVisible(false);
+				}
+				
+				currentLevel = nextLevel;
+				level = currentLevel.getImage();
+				level.setVisible(true);
+				stage.addActor(level);
+				stage.addActor(character);
+				
+				positionX = currentLevel.getStartingX();
+				positionY = currentLevel.getStartingY();
+				
 			}
 	
 			currentPlayerDirection = Direction.RIGHT;
@@ -365,7 +416,12 @@ public class GameLayer extends AbstractReceiverLayer {
 				if (g.isItemPickup()) {
 					Item item = g.getItem();
 					
-					text = "You picked up item " + item.getId();
+					if (item != null) {
+						text = "You picked up item " + item.getId();	
+					}
+					else {
+						text = "Meh... found nothing.";
+					}
 					// TODO: alter state of the player's inventory
 				}
 				else {
