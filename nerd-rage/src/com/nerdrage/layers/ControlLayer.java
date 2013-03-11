@@ -120,9 +120,9 @@ public class ControlLayer extends AbstractLayer {
 		dPadSprite = new Sprite (dPadTexture);
 		dPadSprite.setPosition(5.0f, 5.0f);
 		
-		xyButtonTexture = new Texture (Gdx.files.internal("data/XYButtons.png"));
+		xyButtonTexture = new Texture (Gdx.files.internal("ui/XYButtonsLarge.png"));
 		xyButtonSprite = new Sprite (xyButtonTexture);
-		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 133.0f, 5.0f);
+		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 261.0f, 5.0f);
 		
 		startButtonTexture = new Texture (Gdx.files.internal("ui/StartButtonLarge.png"));
 		startButtonSprite = new Sprite (startButtonTexture);
@@ -258,17 +258,17 @@ public class ControlLayer extends AbstractLayer {
 				}	
 			}
 			else if (x >= 336 && x < 464) {
-				if (y < 69) {
+				if (y < 55) {
 					button = Button.START;
 				}
 			}
-			else if (x > 668 && x < 730) {
-				if (y < 73) {
+			else if (x > 603 && x < 699) {
+				if (y < 101) {
 					button = Button.Y;
 				}	
 			}
-			else if (x > 730 && x < 795) {
-				if (y > 73) {
+			else if (x > 699 && x < 795) {
+				if (y > 101) {
 					button = Button.X;
 				}	
 			}
