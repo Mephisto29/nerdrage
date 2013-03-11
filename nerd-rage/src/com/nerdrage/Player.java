@@ -7,6 +7,8 @@ public class Player
 	int damage;
 	int equipDamage;
 	int experience;
+	float thirst;
+	float hunger;
 	
 	
 	public int getHealth()
@@ -50,6 +52,23 @@ public class Player
 		}
 	}
 	
+	public void adjustHunger (float toAdd) {
+		hunger = Math.min(Math.max((hunger + toAdd), 0.0f), 100.0f);  
+	}
+	
+	public void adjustThirst (float toAdd) {
+		thirst = Math.min(Math.max((thirst + toAdd), 0.0f), 100.0f);  
+	}
+	
+	public float getThirst () {
+		return thirst;
+	}
+	
+	public float getHunger () {
+		return hunger;
+	}
+	
+	
 	public Player()
 	{
 		health = 100;
@@ -57,5 +76,7 @@ public class Player
 		level = 1;
 		experience = 0;
 		damage = 10;
+		thirst = 100.0f;
+		hunger = 100.0f;
 	}
 }

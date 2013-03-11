@@ -26,13 +26,18 @@ public class GameScreen extends AbstractScreen {
 	private boolean inCombat = true;
 
 	public GameScreen (Game game) {
-		gameLayer = new GameLayer(game);
-		combatLayer = new CombatLayer(player);
-
-		controlLayer = new ControlLayer();
 		
-		controlLayer.setReceiver (combatLayer);
-		controlLayer.setStartButtonVisible(false);
+		player = new Player();
+		
+		gameLayer = new GameLayer(game, player);
+		combatLayer = new CombatLayer(player);
+		inCombat = false;
+
+		controlLayer = new ControlLayer(player);
+		controlLayer.setReceiver (gameLayer);
+		controlLayer.setStartButtonVisible(true);
+		
+		gameLayer.setControlLayer(controlLayer);
 	}
 	
 	@Override
