@@ -120,9 +120,9 @@ public class ControlLayer extends AbstractLayer {
 		dPadSprite = new Sprite (dPadTexture);
 		dPadSprite.setPosition(5.0f, 5.0f);
 		
-		xyButtonTexture = new Texture (Gdx.files.internal("data/XYButtons.png"));
+		xyButtonTexture = new Texture (Gdx.files.internal("ui/XYButtonsLarge.png"));
 		xyButtonSprite = new Sprite (xyButtonTexture);
-		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 133.0f, 5.0f);
+		xyButtonSprite.setPosition(Gdx.graphics.getWidth() - 261.0f, 5.0f);
 		
 		startButtonTexture = new Texture (Gdx.files.internal("ui/StartButtonLarge.png"));
 		startButtonSprite = new Sprite (startButtonTexture);
@@ -163,8 +163,8 @@ public class ControlLayer extends AbstractLayer {
 		
 		
 		// initialise availability array
-		available = new boolean[7];
-		for (int i = 0; i < 7; i++) {
+		available = new boolean[4];
+		for (int i = 0; i < 4; i++) {
 			available[i] = true;
 		}
 		
@@ -258,17 +258,17 @@ public class ControlLayer extends AbstractLayer {
 				}	
 			}
 			else if (x >= 336 && x < 464) {
-				if (y < 69) {
+				if (y < 55) {
 					button = Button.START;
 				}
 			}
-			else if (x > 668 && x < 730) {
-				if (y < 73) {
+			else if (x > 603 && x < 699) {
+				if (y < 101) {
 					button = Button.Y;
 				}	
 			}
-			else if (x > 730 && x < 795) {
-				if (y > 73) {
+			else if (x > 699 && x < 795) {
+				if (y > 101) {
 					button = Button.X;
 				}	
 			}
@@ -279,8 +279,14 @@ public class ControlLayer extends AbstractLayer {
 			
 			synchronized (this) {
 				
+				int id = button.id;
+				if (id >= 0 && id <= 3) {
+					id = 0;
+				}
+				
+				
 				// check that the button can be pressed again
-				if (available [button.id]) {
+				if (available [id]) {
 					
 					// send a message to the receiver
 					switch (button) {
@@ -316,10 +322,10 @@ public class ControlLayer extends AbstractLayer {
 						}
 					}
 					
-					available[button.id] = false;
+					available[id] = false;
 					
 					// reset the availability of the button after the specified time
-					InputDelayResetter resetter = new InputDelayResetter(button.id);
+					InputDelayResetter resetter = new InputDelayResetter(id);
 					ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 					executor.schedule(resetter, RECEIVER_DELAY, TimeUnit.MILLISECONDS);	
 				}
