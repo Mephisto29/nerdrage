@@ -23,9 +23,13 @@ import com.nerdrage.Enemy;
 import com.nerdrage.Player;
 import com.nerdrage.layers.GameLayer.Direction;
 
+import com.nerdrage.screens.GameScreen;
+
 public class CombatLayer extends AbstractReceiverLayer {
 
 	private SpriteBatch batch; 
+
+	private GameScreen gameScreen;
 
 	public Player player;
 	public Enemy enemy;
@@ -96,6 +100,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 	private boolean step2 = false;
 	private boolean step3 = false;
 
+	private boolean combatOver = false;
+	
 	private int position = 0;
 	private int confusedAttack = 33;
 	private int runawaychance = 33;
@@ -107,10 +113,10 @@ public class CombatLayer extends AbstractReceiverLayer {
 	int enemydamage = 0;
 	int experience = 0;
 
+	public CombatLayer (Player player1, GameScreen gameScreen) {
 
-
-	public CombatLayer (Player player1) {
-
+		this.gameScreen = gameScreen;
+		
 		batch = new SpriteBatch ();
 
 		stage = new Stage(WIDTH, HEIGHT, true);
@@ -324,10 +330,12 @@ public class CombatLayer extends AbstractReceiverLayer {
 	public void leftPressed() 
 	{
 		if(position == 1)
+
 		{
 			battleSelectionBoxSprite.setPosition( Gdx.graphics.getWidth() / 2.0f + 80.0f , 102f);
 			position = 0;
 		}
+
 		else if(position == 2)
 		{
 			battleSelectionBoxSprite.setPosition( Gdx.graphics.getWidth() / 2.0f + 140.0f , 102f);
@@ -372,6 +380,9 @@ public class CombatLayer extends AbstractReceiverLayer {
 				}
 				else
 					text = "GG!!  You have been pummeled to death";
+					
+					combatOver = true;
+				}
 				
 				// change state
 			}
@@ -396,6 +407,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 						{
 							System.out.println("VICTORY");
 							System.out.println("YOU HAVE WON");
+
+							combatOver = true;
 						}
 					}
 					else if (position == 1)
@@ -416,6 +429,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 						playerTurn = false;
 						specialAttack = true;
 						playerstep = true;
+
 					}
 					else if (position == 2)
 					{
@@ -474,6 +488,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 						if (runable < runawaychance)
 						{
 							ranAway = true;
+							combatOver = true;
 						}
 						playerTurn = false;
 						playerstep = true;
@@ -496,6 +511,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					if(ranAway)
 					{
 						text = "You have successfully evaded the Jock";
+						combatOver = true;
 					}
 					else if(confused)
 					{
@@ -523,6 +539,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					{
 						text = "YOU GAIN NOTHING WIMP!";
 						// CHANGE STATE
+						combatOver = true;
 					}
 					else if(usedFood)
 					{
@@ -577,8 +594,14 @@ public class CombatLayer extends AbstractReceiverLayer {
 					usewater = false;
 					usedFood = false;
 					position = 0;
+
+					
 					if(ranAway)
 						System.out.println("ESCAPED");
+					if(ranAway) {
+						System.out.println("ESCAPED");
+						combatOver = true;
+					}
 				}
 			}
 			if(!dialogVisible)
@@ -616,7 +639,6 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 				}
 			}
-		}
 		else
 		{
 			MoveByAction action = new MoveByAction();
@@ -633,6 +655,10 @@ public class CombatLayer extends AbstractReceiverLayer {
 				public void run () {
 					synchronized (this) {
 						dialogVisible = false;
+						if (combatOver) 
+						{
+							gameScreen.exitCombat();
+						}
 					}
 				}
 			});

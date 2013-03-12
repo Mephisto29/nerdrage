@@ -3,9 +3,12 @@ package com.nerdrage.levels;
 import java.util.HashMap;
 import java.io.*;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.nerdrage.NerdRageGame;
-
 /**
  * Level class which will contain information about the area in which the user is. As well as
  * information about possible items which the user can pick up and interactions with world objects.
@@ -13,26 +16,40 @@ import com.nerdrage.NerdRageGame;
 public class Level {
 	
 	/**
+	 * Private constants
+	 */
+	protected static int WIDTH = 800;
+	protected static int HEIGHT = 480;
+	
+	/**
 	 * Private instance variables
 	 */
-	private char[][] levelGrid;
-	private HashMap<Character, GridBlock> interactiveBlocks;
+	protected char[][] levelGrid;
+	protected HashMap<Character, GridBlock> interactiveBlocks;
+	protected HashMap<String, TransitionBlock> transitionBlocks;
+
+	protected int width;
+	protected int height;
 	
-	private int width;
-	private int height;
+	protected int startingX;
+	protected int startingY;
 	
-	private int startingX;
-	private int startingY;
+	protected FileHandle imageToLoad;
+	protected Image levelImage;
+	
+	protected boolean isLoaded;
+	protected boolean isTown;
 	
 	/**
 	 * Method to load in a level from a file
 	 * 
 	 * @param dataFile The file to load in the level from
 	 */
-	public Level (FileHandle dataFile) {
+	public Level (FileHandle dataFile, FileHandle imageHandle) {
 		
 		BufferedReader input = null;
 		interactiveBlocks = new HashMap<Character, GridBlock>();
+		transitionBlocks = new HashMap<String, TransitionBlock>();
 		
 		input = new BufferedReader(dataFile.reader());
 		
@@ -51,10 +68,11 @@ public class Level {
 				
 				for (int x = 0; x < width; x++)  {
 					levelGrid[y][x] = line.charAt(x);
-					
 					if (line.charAt(x) == 'X') {
 						startingX = x;
 						startingY = y - 1;
+						TransitionBlock t = new TransitionBlock();
+						transitionBlocks.put("X:" + x + "Y:" + y, t);
 					}
 				}
 			}
@@ -102,7 +120,6 @@ public class Level {
 			System.out.println ("Error reading in file");
 		}
 		
-		// for testing purposes
 		if (NerdRageGame.DEBUG) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++)  {
@@ -112,7 +129,12 @@ public class Level {
 			}
 			
 			System.out.println (interactiveBlocks);
+			System.out.println (transitionBlocks);
 		}
+		
+		levelImage = null;
+		imageToLoad = imageHandle;
+		isLoaded = false;
 	}
 	
 	/**
@@ -173,4 +195,86 @@ public class Level {
 		System.out.println (height * 64);
 		return height;
 	}
+	
+	/**
+	 * For cleaning up resources we only load the image when necessary
+	 */
+	public void load () {
+		Texture levelTexture = new Texture(imageToLoad);
+		TextureRegion region = new TextureRegion(levelTexture, 0, 0, width * 64, height * 64);
+		levelImage = new Image(region);
+		levelImage.setPosition(WIDTH / 2 - 32.0f - (startingX * 64.0f), HEIGHT / 2 - 32.0f - ((height - startingY - 1) * 64.0f));
+		isLoaded = true;
+	}
+	
+	/**
+	 * For cleaning up resources we only load the image when necessary
+	 */
+	public void unload () {
+		levelImage = null;
+		isLoaded = false;
+	}
+	
+	/**
+	 * Method to get the image for the level
+	 * 
+	 * @return The loaded in image file as an Image actor
+	 */
+	public Image getImage () {
+		
+		if (isLoaded) {
+			System.out.println ("image loaded is:" + imageToLoad.path());
+			return levelImage;
+		}
+		
+		load();
+		
+		System.out.println ("image to load is:" + imageToLoad.path());
+		return levelImage;
+	}
+	
+	/**
+	 * If the Level should be considered as a house then we set it as such and give it the town as an argument
+	 * 
+	 * @param town The town in which the house resides
+	 */
+	public void setToHouse (Town town) {
+
+		for (TransitionBlock t : transitionBlocks.values()) {
+			t.setTransitionTo(town);
+		}
+		
+		isTown = false;
+	}
+	
+	/**
+	 * Method to get the transition block at a specific block
+	 * 
+	 * @param x The x position of the block
+	 * @param y The y position of the block
+	 * @return The transition block for that block
+	 */
+	public TransitionBlock getTransitionBlockAtPosition (int x, int y) {
+		return transitionBlocks.get("X:" + x + "Y:" + y);
+	}
+	
+	/**
+	 * Method to check if the level is a house
+	 * 
+	 * @return Whether or not the level is a house
+	 */
+	public boolean isHouse () {
+		return ! isTown;
+	}
+	
+	/**
+	 * A method to get the probability of entering combat in the level
+	 * 
+	 * @return The probability of encountering a jock
+	 */
+	public float getCombatChance () {
+		return 0.0f;
+	}
 }
+
+

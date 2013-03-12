@@ -29,13 +29,20 @@ public class GameScreen extends AbstractScreen {
 		
 		player = new Player();
 		
-		gameLayer = new GameLayer(game, player);
-		combatLayer = new CombatLayer(player);
-		inCombat = true;
+		gameLayer = new GameLayer(game, player, this);
+		combatLayer = new CombatLayer(player, this);
+		inCombat = false;
 
 		controlLayer = new ControlLayer(player);
-		controlLayer.setReceiver (combatLayer);
-		controlLayer.setStartButtonVisible(true);
+
+		if (inCombat) {
+			controlLayer.setReceiver (combatLayer);
+			controlLayer.setStartButtonVisible(false);
+		}
+		else {
+			controlLayer.setReceiver (gameLayer);
+			controlLayer.setStartButtonVisible(true);
+		}
 		
 		gameLayer.setControlLayer(controlLayer);
 	}
@@ -69,5 +76,18 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void show() {
 		
+	}
+	
+	public void enterCombat () {
+		inCombat = true;
+		combatLayer = new CombatLayer(player, this);
+		controlLayer.setReceiver (combatLayer);
+		controlLayer.setStartButtonVisible(false);
+	}
+	
+	public void exitCombat () {
+		inCombat = false;
+		controlLayer.setReceiver (gameLayer);
+		controlLayer.setStartButtonVisible(true);
 	}
 }

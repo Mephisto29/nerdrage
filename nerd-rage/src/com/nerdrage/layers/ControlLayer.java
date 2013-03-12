@@ -73,7 +73,7 @@ public class ControlLayer extends AbstractLayer {
 	private boolean[] available;
 	
 	private boolean startButtonVisible;
-	
+
 	private Texture meterTexture;
 	private Sprite[] thirstMeter;
 	private Sprite[] hungerMeter; 
@@ -85,7 +85,6 @@ public class ControlLayer extends AbstractLayer {
 	private Sprite thirstIcon;
 	
 	private Player player;
-	
 	/**
 	 * An enum to simplify the understanding of the code to check the state of the buttons
 	 */
@@ -283,7 +282,9 @@ public class ControlLayer extends AbstractLayer {
 				if (id >= 0 && id <= 3) {
 					id = 0;
 				}
-				
+				else {
+					id -= 3;
+				}
 				
 				// check that the button can be pressed again
 				if (available [id]) {

@@ -1,7 +1,7 @@
 package com.nerdrage.objects;
 
 /**
- * Item class which will interact with persistent storage to load in items. Each item will have certain 
+ * Item class which will interact with persistent storage to load in items. Each item will have certain
  * characteristics.
  */
 public class Item {
@@ -29,5 +29,4 @@ public class Item {
 	public String getId () {
 		return id;
 	}
-	
 }
