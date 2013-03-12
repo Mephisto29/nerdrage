@@ -23,15 +23,15 @@ public class GameScreen extends AbstractScreen {
 	private ControlLayer controlLayer;
 	private Game game;
 	public Player player;
-	private boolean inCombat = false;
+	private boolean inCombat = true;
 
 	public GameScreen (Game game) {
 		
 		player = new Player();
 		
-		gameLayer = new GameLayer(game, player, this);
+		//gameLayer = new GameLayer(game, player, this);
 		combatLayer = new CombatLayer(player, this);
-		inCombat = false;
+		inCombat = true;
 
 		controlLayer = new ControlLayer(player);
 
@@ -44,7 +44,7 @@ public class GameScreen extends AbstractScreen {
 			controlLayer.setStartButtonVisible(true);
 		}
 		
-		gameLayer.setControlLayer(controlLayer);
+		//gameLayer.setControlLayer(controlLayer);
 	}
 	
 	@Override

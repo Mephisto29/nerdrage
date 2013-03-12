@@ -44,7 +44,7 @@ public class Enemy
 	public int getDamage()
 	{
 		double damagedone = Math.random();
-		return ((int)damagedone *damage) + attackDamage;
+		return ((int)(( damage + attackDamage )*damagedone));
 	}
 	
 	public void setDamage()
@@ -55,14 +55,14 @@ public class Enemy
 	public String getAttack()
 	{
 		double attackselect = Math.random()*100;
-		if(attackselect > 80)
+		if(attackselect > 90)
 		{
-			damage = damage * 2;
+			damage = (int)(damage + 2f);
 			return attack2;
 		}
-		else if (attackselect > 40)
+		else if (attackselect > 60)
 		{
-			attackDamage += 5;
+			attackDamage += 1;
 			return attack1;
 		}
 		else
@@ -72,7 +72,7 @@ public class Enemy
 	public Enemy()
 	{
 		health = 100;
-		damage = 20;
+		damage = 5;
 		attackDamage = 0;
 		attack = "Pummel Nerd";
 		attack1 = "WEDGIE";
