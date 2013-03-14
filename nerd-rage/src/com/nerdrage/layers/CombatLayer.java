@@ -99,7 +99,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 	private boolean step1 = false;
 	private boolean step2 = false;
 	private boolean step3 = false;
-
+	private boolean hacked = false;
 	private boolean combatOver = false;
 
 	private int position = 0;
@@ -107,11 +107,14 @@ public class CombatLayer extends AbstractReceiverLayer {
 	private int runawaychance = 33;
 	private double confuse;
 	private double runable;
+	
 
 	String enemyAttack = "";
 	int playerdamage = 0;
 	int enemydamage = 0;
 	int experience = 0;
+
+	int bonusTurn = 0;
 
 	public CombatLayer (Player player1, GameScreen gameScreen) {
 
@@ -214,7 +217,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 			{
 				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -10, 42f);		
 			}
-			
+
 			battleSelectionBoxSprite.draw(batch,1f);
 
 		}
@@ -308,13 +311,13 @@ public class CombatLayer extends AbstractReceiverLayer {
 			{
 				font.draw(batch, "Normal", Gdx.graphics.getWidth() /2.0f, 125f);
 				font.draw(batch, "Special", Gdx.graphics.getWidth() / 2.0f , 95f);
-				font.draw(batch, "Back", Gdx.graphics.getWidth() / 2.0f, 65f);
+				font.draw(batch, "Critical", Gdx.graphics.getWidth() / 2.0f, 65f);
 			}
 			else if(itemMenu)
 			{
 				font.draw(batch, "Water", Gdx.graphics.getWidth() / 2.0f , 125f);
 				font.draw(batch, "Food", Gdx.graphics.getWidth() / 2.0f , 95f);
-				font.draw(batch, "Back", Gdx.graphics.getWidth() / 2.0f , 65f);
+				font.draw(batch, "Laptop", Gdx.graphics.getWidth() / 2.0f , 65f);
 			}
 			else
 			{
@@ -336,16 +339,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void upPressed() 
-	{	}
+	{	
+		if(position == 0)
+			position = 2;
 
-	@Override
-	public void downPressed() 
-	{	}
-
-	@Override
-	public void leftPressed() 
-	{
-		if(position == 1)
+		else if(position == 1)
 			position = 0;
 
 		else if(position == 2)
@@ -355,9 +353,12 @@ public class CombatLayer extends AbstractReceiverLayer {
 	}
 
 	@Override
-	public void rightPressed() 
-	{
-		if(position == 0)
+	public void downPressed() 
+	{	
+		if(position == 2)
+			position = 0;
+
+		else if(position == 0)
 			position = 1;
 
 		else if(position == 1)
@@ -365,6 +366,14 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 		else;
 	}
+
+	@Override
+	public void leftPressed() 
+	{	}
+
+	@Override
+	public void rightPressed() 
+	{	}
 
 	@Override
 	public void xPressed() 
@@ -390,6 +399,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 			if(playerTurn)
 			{
+				playerdamage = player.getDamage();
 				if(attackMenu == true)
 				{
 					if(position == 0)
@@ -431,7 +441,33 @@ public class CombatLayer extends AbstractReceiverLayer {
 					}
 					else if (position == 2)
 					{
-						System.out.println("BACK TO PREVIOUS MENU");
+						System.out.println("Critical");
+						double crit = Math.random();
+						if(crit > 0.5)
+						{
+							playerdamage = playerdamage*2;
+							enemy.setHealth(playerdamage);
+
+							playerTurn = false;
+							playerstep = true;
+
+							text = "You do a critical attack and do " + playerdamage + " damage";
+						}
+						else
+						{
+							playerdamage = 0;
+							playerTurn = false;
+							playerstep = true;
+
+							text = "You try to do a critical attack and miss horribly";
+						}
+
+
+						if(enemy.getHealth() <= 0)
+						{
+							System.out.println("VICTORY");
+							System.out.println("YOU HAVE WON");
+						}
 					}
 					attackMenu = false;
 				}
@@ -462,7 +498,14 @@ public class CombatLayer extends AbstractReceiverLayer {
 					}
 					else if (position == 2)
 					{
+						System.out.println("USE LAPTOP");
+						//enemy.setDamage();
+						playerTurn = false;
+						playerstep = true;
+						bonusTurn = 2;
+						hacked = true;
 
+						text = "You use a battery to start up your laptop";
 					}
 					itemMenu = false;
 				}
@@ -501,34 +544,52 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 			else
 			{
+
 				if(playerstep)
 				{
-					playerdamage = player.getDamage();
-					enemydamage = enemy.getDamage();
-					enemyAttack = enemy.getAttack();
-					
 					playerstep = false;
 					step1 = true;
-
-					if(ranAway)
+					
+					if(bonusTurn > 0)
 					{
-						text = "You have successfully evaded the Jock";
-						combatOver = true;
-					}
-					else if(confused)
-					{
-						text =  "The Jock is super confused\n";
-						confuse = Math.random()*100;
-						if (confuse < confusedAttack)
-						{						}
+						if(hacked)
+						{
+							bonusTurn--;
+							if(hacked)
+								text = "You use your Laptop to hack the Jock's phone";
+							hacked = false;
+						}
 						else
 						{
-							text = text + "Jock uses " + enemyAttack;
+							bonusTurn--;
+							playerTurn = true;
 						}
 					}
 					else
 					{
-						text = "Jock uses " + enemyAttack;
+						enemydamage = enemy.getDamage();
+						enemyAttack = enemy.getAttack();
+						
+						if(ranAway)
+						{
+							text = "You have successfully evaded the Jock";
+							//combatOver = true;
+						}
+						else if(confused)
+						{
+							text =  "The Jock is super confused\n";
+							confuse = Math.random()*100;
+							if (confuse < confusedAttack)
+							{						}
+							else
+							{
+								text = text + "Jock uses " + enemyAttack;
+							}
+						}
+						else
+						{
+							text = "Jock uses " + enemyAttack;
+						}
 					}
 
 				}
@@ -536,11 +597,17 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					step1 = false;
 					step2 = true;
-
+					
 					if(ranAway)
 					{
 						text = "YOU GAIN NOTHING WIMP!";
 					}
+					
+					else if(bonusTurn > 0)
+					{
+						text = "The Jock tries to fix his phone for 2 rounds";
+					}
+
 					else if(usedFood)
 					{
 						text = "The Jock Munches the food";
@@ -595,10 +662,17 @@ public class CombatLayer extends AbstractReceiverLayer {
 					usewater = false;
 					usedFood = false;
 					position = 0;
-
-					if(ranAway) {
+					
+					if(ranAway) 
+					{
 						System.out.println("ESCAPED");
 						combatOver = true;
+					}
+					else if(bonusTurn > 0)
+					{
+						step2=true;
+						text = "The Jock tries to fix his phone for 2 rounds";
+						step1 = false;
 					}
 				}
 			}

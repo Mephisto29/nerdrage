@@ -34,11 +34,11 @@ public class Player
 	public int getDamage()
 	{
 		double attackdamage = Math.random();
-		int tempdamage = (int)(damage*attackdamage);
+		int tempdamage = (int)Math.floor(damage*attackdamage);
 		if(tempdamage == 0)
-			return (1+equipDamage);
+			return (1+equipDamage + level);
 		else
-			return (int)(damage*attackdamage) + equipDamage;
+			return tempdamage + equipDamage + level;
 	}
 	
 	public void setEquiped( int damage)

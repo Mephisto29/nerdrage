@@ -28,9 +28,9 @@ public class Enemy
 	public void setLevel(int playerlevel)
 	{
 		double jockLevel = Math.random();
-		if(jockLevel > 66)
+		if(jockLevel > 0.7)
 			level = playerlevel++;
-		else if (jockLevel > 33)
+		else if (jockLevel > 0.5)
 			level = playerlevel;
 		else
 			level = playerlevel--;
@@ -44,12 +44,13 @@ public class Enemy
 	public int getDamage()
 	{
 		double damagedone = Math.random();
-		return ((int)(( damage + attackDamage )*damagedone));
+		return ((int)(damage*damagedone)+ level + attackDamage);
 	}
 	
 	public void setDamage()
 	{
-		damage = damage/2;
+		damage = 5 + level;
+		attackDamage = 0;
 	}
 	
 	public String getAttack()
@@ -72,7 +73,7 @@ public class Enemy
 	public Enemy()
 	{
 		health = 100;
-		damage = 5;
+		damage = 5 + level;
 		attackDamage = 0;
 		attack = "Pummel Nerd";
 		attack1 = "WEDGIE";
