@@ -1,6 +1,7 @@
 package com.nerdrage;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.nerdrage.screens.*;
 
@@ -18,12 +19,9 @@ public class NerdRageGame extends Game {
 	@Override
 	public void create() {		
 		fpsLogger = new FPSLogger();
-//<<<<<<< Updated upstream
-		setScreen(new SplashScreen(this));
-		//setScreen(new GameScreen(this));
-//=======
-		//setScreen(new MainMenuScreen(this));
-//>>>>>>> Stashed changes
+		//setScreen(new SplashScreen(this));
+		Gdx.input.setCatchBackKey(true);
+		setScreen(new GameScreen(this));
 	}
 
 	@Override

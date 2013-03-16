@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.nerdrage.Player;
 import com.nerdrage.layers.*;
 import com.nerdrage.*;
+import com.nerdrage.screens.*;
 
 /**
  * This will be the main screen in which the game takes place. The game screen will display a
@@ -25,59 +26,71 @@ public class GameScreen extends AbstractScreen {
 	private Game game;
 	public Player player;
 	private boolean inCombat = true;
-
+	
+	
 	public GameScreen (Game game) {
 		
-		player = new Player();
-		
-		//gameLayer = new GameLayer(game, player, this);
-		combatLayer = new CombatLayer(player, this);
-		inCombat = true;
-
-		controlLayer = new ControlLayer(player);
-
-		if (inCombat) {
-			controlLayer.setReceiver (combatLayer);
-			controlLayer.setStartButtonVisible(false);
+			this.game=game;
+			player = new Player();
+			
+			//gameLayer = new GameLayer(game, player, this);
+			combatLayer = new CombatLayer(player, this);
+			inCombat = true;
+	
+			controlLayer = new ControlLayer(player);
+	
+			if (inCombat) {
+				controlLayer.setReceiver (combatLayer);
+				controlLayer.setStartButtonVisible(false);
+			}
+			else {
+				controlLayer.setReceiver (gameLayer);
+				controlLayer.setStartButtonVisible(true);
+			}
 		}
-		else {
-			controlLayer.setReceiver (gameLayer);
-			controlLayer.setStartButtonVisible(true);
-		}
-		
 		//gameLayer.setControlLayer(controlLayer);
-	}
 	
 	@Override
 	public void render(float delta) {
 		
-		// log frame rate
-		if (NerdRageGame.DEBUG) {
-			//NerdRageGame.fpsLogger.log();
+		switch(game_state){
+		case RUNNING:
+			// log frame rate
+			if (NerdRageGame.DEBUG) {
+				//NerdRageGame.fpsLogger.log();
+			}
+
+			if (Gdx.input.isTouched()) {
+				// pass the input on to the control layer
+				controlLayer.handleTouch(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+			}
+
+			Gdx.gl.glClearColor(0, 0, 0, 0);
+			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+			if (inCombat) {
+				combatLayer.draw(delta);
+			}
+			else {
+				gameLayer.draw(delta);
+			}
+			controlLayer.draw(delta);
+			//System.out.println("Game resumed");
+
+			break;
+		case PAUSED:
+			game.setScreen(new PauseMenuScreen(game));
+			//System.out.println("Game paused");
+			break;
 		}
-		
-		if (Gdx.input.isTouched()) {
-			// pass the input on to the control layer
-			controlLayer.handleTouch(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-		}
-		
-		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		if (inCombat) {
-			combatLayer.draw(delta);
-		}
-		else {
-			gameLayer.draw(delta);
-		}
-		
-		controlLayer.draw(delta);
 		
 		//override back button of phone to go back to pause menu
 		if(Gdx.input.isKeyPressed(Keys.BACK)){
+			game_state=State.PAUSED;
 			game.setScreen(new PauseMenuScreen(game));
 		}
 	}
+		
 	
 	@Override
 	public void show() {

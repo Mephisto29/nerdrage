@@ -32,9 +32,9 @@ public class PauseMenuScreen extends AbstractScreen {
 
 	Game game;
 	SpriteBatch spritebatch;
-	Texture inventory_texture,equipment_texture,back_to_menu_texture,flames_texture,resume_texture;
+	Texture inventory_texture,equipment_texture,back_to_menu_texture,flames_texture,resume_texture,restart_texture;
 	TextureRegion flames_texture_region;
-	Sprite inventory_sprite,equipment_sprite,back_to_menu_sprite,resume_sprite;
+	Sprite inventory_sprite,equipment_sprite,back_to_menu_sprite,resume_sprite,restart_sprite;
 	float screen_width=Gdx.graphics.getWidth();
 	float screen_height=Gdx.graphics.getHeight();
 	float button_width=256;
@@ -52,7 +52,11 @@ public class PauseMenuScreen extends AbstractScreen {
 		
 		resume_texture=new Texture(Gdx.files.internal("buttons/continue.png"));
 		resume_sprite=new Sprite(resume_texture);
-		resume_sprite.setPosition(center, center_y+(3*64));
+		resume_sprite.setPosition(center, center_y+(4*64));
+		
+		restart_texture=new Texture(Gdx.files.internal("buttons/restart.png"));
+		restart_sprite=new Sprite(restart_texture);
+		restart_sprite.setPosition(center, center_y+(3*64));
 		
 		inventory_texture=new Texture(Gdx.files.internal("buttons/inventory.png"));
 		inventory_sprite=new Sprite(inventory_texture);
@@ -74,15 +78,6 @@ public class PauseMenuScreen extends AbstractScreen {
 	public void print(String text){
 		System.out.println(text);
 	}
-	public boolean point_in_rectangle(Rectangle rect,float p_x,float p_y){
-		float left=rect.getX();
-		float right=rect.getWidth()+left;
-		float top=rect.getY();
-		float bottom=top+rect.getHeight();
-		print("left:"+left+" right:"+right+" top:"+top+" bottom"+bottom);
-		print("touched: "+p_x+","+p_y);
-		return p_x>=left && p_x<=right && p_y>=top && p_y<=bottom;
-	}
 	
 	public void update(float delta){
 		
@@ -94,14 +89,20 @@ public class PauseMenuScreen extends AbstractScreen {
 //		print("projected: "+touched.x+","+touched.y);
 		camera.unproject(touched);
 //		print("UNprojected: "+touched.x+","+touched.y);
-		Rectangle continue_rectangle=new Rectangle(center,center_y+(button_height*3),button_width,button_height);
+		Rectangle continue_rectangle=new Rectangle(center,center_y+(button_height*4),button_width,button_height);
+		Rectangle restart_rectangle=new Rectangle(center,center_y+(button_height*3),button_width,button_height);
 		Rectangle inventory_rectangle=new Rectangle(center,center_y+(button_height*2),button_width,button_height);
 		Rectangle equipment_rectangle=new Rectangle(center,center_y+button_height,button_width,button_height);
 		Rectangle back_to_menu_rectangle=new Rectangle(center,center_y,button_width,button_height);
 		if(Gdx.input.justTouched()){
 			if(point_in_rectangle(continue_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed continue");
+				//Handle state variables here
 				game.setScreen(new GameScreen(game));
+			}
+			else if(point_in_rectangle(restart_rectangle,touched.x, touched.y)){
+				game.setScreen(new GameScreen(game));
+				System.out.println("Pressed restart");
 			}
 			else if(point_in_rectangle(inventory_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed inventory");
@@ -124,6 +125,8 @@ public class PauseMenuScreen extends AbstractScreen {
 		
 		spritebatch.begin();
 		spritebatch.draw(flames_texture_region,0,0,screen_width,screen_height);
+		resume_sprite.draw(spritebatch);
+		restart_sprite.draw(spritebatch);
 		inventory_sprite.draw(spritebatch);
 		equipment_sprite.draw(spritebatch);
 		back_to_menu_sprite.draw(spritebatch);

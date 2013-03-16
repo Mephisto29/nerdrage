@@ -69,15 +69,6 @@ public class MainMenuScreen extends AbstractScreen {
 	public void print(String text){
 		System.out.println(text);
 	}
-	public boolean point_in_rectangle(Rectangle rect,float p_x,float p_y){
-		float left=rect.getX();
-		float right=rect.getWidth()+left;
-		float top=rect.getY();
-		float bottom=top+rect.getHeight();
-		print("left:"+left+" right:"+right+" top:"+top+" bottom"+bottom);
-		print("touched: "+p_x+","+p_y);
-		return p_x>=left && p_x<=right && p_y>=top && p_y<=bottom;
-	}
 	
 	public void update(float delta){
 		
