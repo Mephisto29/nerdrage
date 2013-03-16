@@ -2,6 +2,7 @@ package com.nerdrage.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.nerdrage.Player;
 import com.nerdrage.layers.*;
@@ -71,6 +72,11 @@ public class GameScreen extends AbstractScreen {
 		}
 		
 		controlLayer.draw(delta);
+		
+		//override back button of phone to go back to pause menu
+		if(Gdx.input.isKeyPressed(Keys.BACK)){
+			game.setScreen(new PauseMenuScreen(game));
+		}
 	}
 	
 	@Override

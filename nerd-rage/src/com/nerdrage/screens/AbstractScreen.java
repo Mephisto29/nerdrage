@@ -1,6 +1,8 @@
 package com.nerdrage.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * Abstract screen class to remove some unnecessary clutter from the other screen classes

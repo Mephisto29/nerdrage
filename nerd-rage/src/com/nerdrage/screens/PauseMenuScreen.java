@@ -28,38 +28,43 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  * Main menu screen. Will allow the user to choose between starting a new game, continuing a paused game, 
  * viewing a tutorial and viewing a high scores page 
  */
-public class MainMenuScreen extends AbstractScreen {
+public class PauseMenuScreen extends AbstractScreen {
 
 	Game game;
 	SpriteBatch spritebatch;
-	Texture play_texture,help_texture,exit_texture,flames_texture;
+	Texture inventory_texture,equipment_texture,back_to_menu_texture,flames_texture,resume_texture;
 	TextureRegion flames_texture_region;
-	Sprite play_sprite,help_sprite,exit_sprite;
+	Sprite inventory_sprite,equipment_sprite,back_to_menu_sprite,resume_sprite;
 	float screen_width=Gdx.graphics.getWidth();
 	float screen_height=Gdx.graphics.getHeight();
 	float button_width=256;
 	float button_height=64;
 	float center=(screen_width-button_width)/2;
-	float center_y=(screen_height-3*button_height)/2;
+	float center_y=(screen_height-4*button_height)/2;
 	OrthographicCamera camera;
 	public enum GameState{PLAYED,UNPLAYED}
-	public MainMenuScreen(Game game){
+	public PauseMenuScreen(Game game){
 		this.game=game;
 		spritebatch=new SpriteBatch();
 		camera=new OrthographicCamera(screen_width, screen_height);
 		camera.setToOrtho(false); //This points the y-axis upwards, instead of downwards
 		print("creating new camera with width: "+screen_width+" and height: "+screen_height);
-		play_texture=new Texture(Gdx.files.internal("buttons/play.png"));
-		play_sprite=new Sprite(play_texture);
-		play_sprite.setPosition(center, center_y+(2*64));
 		
-		help_texture=new Texture(Gdx.files.internal("buttons/help.png"));
-		help_sprite=new Sprite(help_texture);
-		help_sprite.setPosition(center, center_y+64);
+		resume_texture=new Texture(Gdx.files.internal("buttons/continue.png"));
+		resume_sprite=new Sprite(resume_texture);
+		resume_sprite.setPosition(center, center_y+(3*64));
 		
-		exit_texture=new Texture(Gdx.files.internal("buttons/exit.png"));
-		exit_sprite=new Sprite(exit_texture);
-		exit_sprite.setPosition(center, center_y);
+		inventory_texture=new Texture(Gdx.files.internal("buttons/inventory.png"));
+		inventory_sprite=new Sprite(inventory_texture);
+		inventory_sprite.setPosition(center, center_y+(2*64));
+		
+		equipment_texture=new Texture(Gdx.files.internal("buttons/equipment.png"));
+		equipment_sprite=new Sprite(equipment_texture);
+		equipment_sprite.setPosition(center, center_y+64);
+		
+		back_to_menu_texture=new Texture(Gdx.files.internal("buttons/backtomenu.png"));
+		back_to_menu_sprite=new Sprite(back_to_menu_texture);
+		back_to_menu_sprite.setPosition(center, center_y);
 		
 		flames_texture=new Texture(Gdx.files.internal("menu/flames.png"));
 		flames_texture_region=new TextureRegion(flames_texture, 0, 0, 512, 310);
@@ -89,21 +94,24 @@ public class MainMenuScreen extends AbstractScreen {
 //		print("projected: "+touched.x+","+touched.y);
 		camera.unproject(touched);
 //		print("UNprojected: "+touched.x+","+touched.y);
-		Rectangle play_rectangle=new Rectangle(center,center_y+(button_height*2),button_width,button_height);
-		Rectangle help_rectangle=new Rectangle(center,center_y+button_height,button_width,button_height);
-		Rectangle exit_rectangle=new Rectangle(center,center_y,button_width,button_height);
+		Rectangle continue_rectangle=new Rectangle(center,center_y+(button_height*3),button_width,button_height);
+		Rectangle inventory_rectangle=new Rectangle(center,center_y+(button_height*2),button_width,button_height);
+		Rectangle equipment_rectangle=new Rectangle(center,center_y+button_height,button_width,button_height);
+		Rectangle back_to_menu_rectangle=new Rectangle(center,center_y,button_width,button_height);
 		if(Gdx.input.justTouched()){
-			if(point_in_rectangle(play_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed play");
+			if(point_in_rectangle(continue_rectangle,touched.x, touched.y)){
+				System.out.println("Pressed continue");
 				game.setScreen(new GameScreen(game));
 			}
-			else if(point_in_rectangle(help_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed help");
-				game.setScreen(new HelpScreen(game));
+			else if(point_in_rectangle(inventory_rectangle,touched.x, touched.y)){
+				System.out.println("Pressed inventory");
 			}
-			else if(point_in_rectangle(exit_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed exit");
-				Gdx.app.exit();
+			else if(point_in_rectangle(equipment_rectangle,touched.x, touched.y)){
+				System.out.println("Pressed equipment");
+			}
+			else{
+				System.out.println("Pressed back to menu");
+				game.setScreen(new MainMenuScreen(game));
 			}
 		}
 	}
@@ -116,9 +124,9 @@ public class MainMenuScreen extends AbstractScreen {
 		
 		spritebatch.begin();
 		spritebatch.draw(flames_texture_region,0,0,screen_width,screen_height);
-		play_sprite.draw(spritebatch);
-		help_sprite.draw(spritebatch);
-		exit_sprite.draw(spritebatch);
+		inventory_sprite.draw(spritebatch);
+		equipment_sprite.draw(spritebatch);
+		back_to_menu_sprite.draw(spritebatch);
 		spritebatch.end();
 	}
 	

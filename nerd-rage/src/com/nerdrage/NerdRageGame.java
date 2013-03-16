@@ -18,8 +18,12 @@ public class NerdRageGame extends Game {
 	@Override
 	public void create() {		
 		fpsLogger = new FPSLogger();
+//<<<<<<< Updated upstream
 		setScreen(new SplashScreen(this));
 		//setScreen(new GameScreen(this));
+//=======
+		//setScreen(new MainMenuScreen(this));
+//>>>>>>> Stashed changes
 	}
 
 	@Override
