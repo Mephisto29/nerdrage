@@ -1,5 +1,7 @@
 package com.nerdrage.screens;
 
+import sun.awt.windows.ThemeReader;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -26,7 +28,7 @@ public class GameScreen extends AbstractScreen {
 	private Game game;
 	public Player player;
 	private boolean inCombat = false;
-
+	
 	public GameScreen (Game game) {
 		
 		player = new Player();
@@ -34,7 +36,6 @@ public class GameScreen extends AbstractScreen {
 		gameLayer = new GameLayer(game, player, this);
 		//combatLayer = new CombatLayer(player, this);
 		inCombat = false;
-
 		controlLayer = new ControlLayer(player);
 
 		if (inCombat) {

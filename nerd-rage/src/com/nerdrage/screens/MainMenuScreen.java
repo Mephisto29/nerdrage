@@ -103,6 +103,7 @@ public class MainMenuScreen extends AbstractScreen {
 			}
 			else if(point_in_rectangle(help_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed help");
+				theme_song.pause();
 				game.setScreen(new HelpScreen(game));
 			}
 			else if(point_in_rectangle(exit_rectangle,touched.x, touched.y) || Gdx.input.isKeyPressed(Keys.BACK)){

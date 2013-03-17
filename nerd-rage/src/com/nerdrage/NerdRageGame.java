@@ -2,6 +2,8 @@ package com.nerdrage;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.nerdrage.screens.*;
 
