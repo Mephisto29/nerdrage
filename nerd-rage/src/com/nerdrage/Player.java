@@ -9,6 +9,8 @@ public class Player
 	int experience;
 	float thirst;
 	float hunger;
+	float nerdRage;
+	boolean inRage;
 	
 	
 	public int getHealth()
@@ -16,9 +18,28 @@ public class Player
 		return health;
 	}
 	
+	public float getRage()
+	{
+		return nerdRage;
+	}
+	
+	public void setInRage()
+	{
+		nerdRage = 0;
+		inRage = true;
+	}
+	
+	public void setRage()
+	{
+		nerdRage = 0;
+		inRage = false;
+	}
+	
 	public void setHealth(int damage)
 	{
 		health = health - damage;
+		
+		nerdRage += damage *4;//*(Math.random()* 3);
 	}
 	
 	public int getLevel()
@@ -35,6 +56,8 @@ public class Player
 	{
 		double attackdamage = Math.random();
 		int tempdamage = (int)Math.floor(damage*attackdamage);
+		if(inRage)
+			tempdamage *=2;
 		if(tempdamage == 0)
 			return (1+equipDamage + level);
 		else
@@ -82,5 +105,7 @@ public class Player
 		damage = 10;
 		thirst = 100.0f;
 		hunger = 100.0f;
+		nerdRage = 0;
+		inRage = false;
 	}
 }

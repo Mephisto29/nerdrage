@@ -35,12 +35,15 @@ public class CombatLayer extends AbstractReceiverLayer {
 	public Enemy enemy;
 
 	private Texture battleScreenTexture;
+	private Texture rageScreenTexture;
 	private TextureRegion battle_screen_texture_region;
+	private TextureRegion rage_screen_texture_region;
 
 	private int image_width=512;
 	private int image_height=310;
 
 	private Sprite battleScreenSprite;
+	private Sprite rageScreenSprite;
 
 	private Texture battleSelectionBoxTexture;
 	private Sprite battleSelectionBoxSprite;
@@ -101,13 +104,14 @@ public class CombatLayer extends AbstractReceiverLayer {
 	private boolean step3 = false;
 	private boolean hacked = false;
 	private boolean combatOver = false;
+	private boolean inRage = false;
 
 	private int position = 0;
 	private int confusedAttack = 33;
 	private int runawaychance = 33;
 	private double confuse;
 	private double runable;
-	
+
 
 	String enemyAttack = "";
 	int playerdamage = 0;
@@ -132,7 +136,9 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 
 		battleScreenTexture = new Texture (Gdx.files.internal("data/Battlescreen.png"));
+		rageScreenTexture = new Texture (Gdx.files.internal("data/Battlescreen2.png"));
 		battleScreenSprite = new Sprite (battleScreenTexture);
+		rageScreenSprite = new Sprite (rageScreenTexture);
 		battleScreenSprite.setPosition(5.0f, 5.0f);
 
 		battleSelectionBoxTexture = new Texture (Gdx.files.internal("data/Battleselectionbox.png"));
@@ -189,6 +195,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 		enemyHealthSprite10.setPosition(214.0f , 200f + 175);
 
 		battle_screen_texture_region = new TextureRegion(battleScreenTexture,0,0,image_width,image_height);
+		rage_screen_texture_region = new TextureRegion(rageScreenTexture,0,0,image_width,image_height);
 
 
 		font = new BitmapFont();
@@ -202,20 +209,25 @@ public class CombatLayer extends AbstractReceiverLayer {
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		batch.begin();
-		batch.draw(battle_screen_texture_region,0, 0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		if(inRage)
+		{
+			batch.draw(rage_screen_texture_region,0, 0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		}
+		else
+			batch.draw(battle_screen_texture_region,0, 0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		if(playerTurn)
 		{
 			if(position == 0)
 			{
-				battleSelectionBoxSprite.setPosition( Gdx.graphics.getWidth() / 2.0f -10, 102f);
+				battleSelectionBoxSprite.setPosition( Gdx.graphics.getWidth() / 2.0f -22, 102f);
 			}
 			else if(position == 1)
 			{
-				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -10 , 72f);
+				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -22 , 72f);
 			}
 			else if(position == 2)
 			{
-				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -10, 42f);		
+				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -22, 42f);		
 			}
 
 			battleSelectionBoxSprite.draw(batch,1f);
@@ -309,21 +321,21 @@ public class CombatLayer extends AbstractReceiverLayer {
 		{
 			if(attackMenu)
 			{
-				font.draw(batch, "Normal", Gdx.graphics.getWidth() /2.0f, 125f);
-				font.draw(batch, "Special", Gdx.graphics.getWidth() / 2.0f , 95f);
-				font.draw(batch, "Critical", Gdx.graphics.getWidth() / 2.0f, 65f);
+				font.draw(batch, "Normal", Gdx.graphics.getWidth() /2.0f - 12, 125f);
+				font.draw(batch, "Special", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				font.draw(batch, "Critical", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
 			}
 			else if(itemMenu)
 			{
-				font.draw(batch, "Water", Gdx.graphics.getWidth() / 2.0f , 125f);
-				font.draw(batch, "Food", Gdx.graphics.getWidth() / 2.0f , 95f);
-				font.draw(batch, "Laptop", Gdx.graphics.getWidth() / 2.0f , 65f);
+				font.draw(batch, "Water", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
+				font.draw(batch, "Food", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				font.draw(batch, "Laptop", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
 			}
 			else
 			{
-				font.draw(batch, "Attack", Gdx.graphics.getWidth() / 2.0f, 125f);
-				font.draw(batch, "Item", Gdx.graphics.getWidth() / 2.0f , 95f);
-				font.draw(batch, "Run", Gdx.graphics.getWidth() / 2.0f ,65f);
+				font.draw(batch, "Attack", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
+				font.draw(batch, "Item", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				font.draw(batch, "Run", Gdx.graphics.getWidth() / 2.0f - 12,65f);
 			}
 		}
 
@@ -380,25 +392,9 @@ public class CombatLayer extends AbstractReceiverLayer {
 	{
 		if(!dialogVisible)
 		{
-			if(step3)
-			{
-				if(player.getHealth() > 0)
-					player.setExperience(experience);
-				playerTurn = false;
-
-				if(enemy.getHealth() <= 0)
-				{
-					text = "Congradulations you defeated a Jock\n";
-					text = text + "You recieve "+ experience +" points of experience";
-				}
-				else
-					text = "GG!!  You have been pummeled to death";
-
-				combatOver = true;
-			}
-
 			if(playerTurn)
 			{
+
 				playerdamage = player.getDamage();
 				if(attackMenu == true)
 				{
@@ -415,8 +411,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 						{
 							System.out.println("VICTORY");
 							System.out.println("YOU HAVE WON");
-
-							combatOver = true;
+							playerstep = false;
+							step3 = true;
 						}
 					}
 					else if (position == 1)
@@ -430,7 +426,9 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 						text = "You try to educate the Jock\n";
 						if(confused)
-						{}
+						{
+							text = text + "The Jock is super confused";
+						}
 						else
 							text = text + "The Jock ignores you";
 
@@ -467,6 +465,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 						{
 							System.out.println("VICTORY");
 							System.out.println("YOU HAVE WON");
+							playerstep = false;
+							step3 = true;
 						}
 					}
 					attackMenu = false;
@@ -529,7 +529,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 						if (runable < runawaychance)
 						{
 							ranAway = true;
-							combatOver = true;
+							//combatOver = true;
 						}
 						playerTurn = false;
 						playerstep = true;
@@ -549,27 +549,32 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					playerstep = false;
 					step1 = true;
-					
+
 					if(bonusTurn > 0)
 					{
+						bonusTurn--;
 						if(hacked)
 						{
-							bonusTurn--;
-							if(hacked)
-								text = "You use your Laptop to hack the Jock's phone";
+							text = "You use your Laptop to hack the Jock's phone";
 							hacked = false;
 						}
 						else
 						{
-							bonusTurn--;
 							playerTurn = true;
+							step1 = false;
+
+						}
+						if(bonusTurn == 0)
+						{
+							inRage = false;
+							player.setRage();
 						}
 					}
 					else
 					{
 						enemydamage = enemy.getDamage();
 						enemyAttack = enemy.getAttack();
-						
+
 						if(ranAway)
 						{
 							text = "You have successfully evaded the Jock";
@@ -580,7 +585,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 							text =  "The Jock is super confused\n";
 							confuse = Math.random()*100;
 							if (confuse < confusedAttack)
-							{						}
+							{
+								enemy.setHealth(enemy.getDamage());
+								text = text + "Jock hurts itself in its confusion";
+								step1 = true;
+							}
 							else
 							{
 								text = text + "Jock uses " + enemyAttack;
@@ -597,12 +606,13 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					step1 = false;
 					step2 = true;
-					
+
 					if(ranAway)
 					{
 						text = "YOU GAIN NOTHING WIMP!";
+						combatOver = true;
 					}
-					
+
 					else if(bonusTurn > 0)
 					{
 						text = "The Jock tries to fix his phone for 2 rounds";
@@ -616,21 +626,17 @@ public class CombatLayer extends AbstractReceiverLayer {
 					{
 						if (confuse < confusedAttack)
 						{
-							enemy.setHealth(enemy.getDamage());
-							text = "Jock hurts itself in its confusion";
+							step3 = true;
+						}
+						else if(enemyAttack.equals("FLEX!!!!!"))
+						{
+							text = "The Jock flexes his muscles! His damage is now doubled!!!!";
 						}
 						else
 						{
-							if(enemyAttack.equals("FLEX!!!!!"))
-							{
-								text = "The Jock flexes his muscles! His damage is now doubled!!!!";
-							}
-							else
-							{
-								int damage = enemy.getDamage();
-								player.setHealth(enemydamage);
-								text = "You recieve " + enemydamage + " points of damage";
-							}
+							int damage = enemy.getDamage();
+							player.setHealth(enemydamage);
+							text = "You recieve " + enemydamage + " points of damage";
 						}
 					}
 					else if(!usedFood )	
@@ -653,6 +659,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 				}
 				else if (step2)
 				{
+					if(player.getRage() > 100)
+					{inRage = true;
+					player.setInRage();
+					bonusTurn += 2;}
+					
 					playerstep = false;
 					step1 = false;
 					step2 = false;
@@ -662,11 +673,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 					usewater = false;
 					usedFood = false;
 					position = 0;
-					
+
 					if(ranAway) 
 					{
 						System.out.println("ESCAPED");
-						combatOver = true;
+
 					}
 					else if(bonusTurn > 0)
 					{
@@ -674,6 +685,19 @@ public class CombatLayer extends AbstractReceiverLayer {
 						text = "The Jock tries to fix his phone for 2 rounds";
 						step1 = false;
 					}
+				}
+				if(step3)
+				{
+					if(player.getHealth() > 0)
+					{
+						player.setExperience(experience);
+						text = "Congradulations you defeated a Jock\n";
+						text = text + "You recieve "+ experience +" points of experience";
+					}
+					else
+						text = "GG!!  You have been pummeled to death";
+
+					combatOver = true;
 				}
 			}
 			if(!dialogVisible)

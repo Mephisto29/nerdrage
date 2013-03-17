@@ -38,7 +38,8 @@ public class Enemy
 	
 	public int getExperience()
 	{
-		return (level*100 + ((int)Math.random()*100));
+		int extraexp = (int)(Math.random()*100);
+		return ((level*100) + extraexp);
 	}
 	
 	public int getDamage()
