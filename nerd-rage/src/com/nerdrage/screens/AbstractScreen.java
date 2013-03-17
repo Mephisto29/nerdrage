@@ -48,12 +48,12 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void pause() {
-		
+		if(game_state==State.RUNNING) game_state=State.PAUSED;
 	}
 
 	@Override
 	public void resume() {
-		
+		if(game_state==State.PAUSED) game_state=State.RUNNING;
 	}
 
 	@Override

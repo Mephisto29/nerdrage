@@ -98,6 +98,7 @@ public class PauseMenuScreen extends AbstractScreen {
 			if(point_in_rectangle(continue_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed continue");
 				//Handle state variables here
+				resume();
 				game.setScreen(new GameScreen(game));
 			}
 			else if(point_in_rectangle(restart_rectangle,touched.x, touched.y)){

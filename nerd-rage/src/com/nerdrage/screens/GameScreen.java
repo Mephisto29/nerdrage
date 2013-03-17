@@ -74,12 +74,9 @@ public class GameScreen extends AbstractScreen {
 				gameLayer.draw(delta);
 			}
 			controlLayer.draw(delta);
-			//System.out.println("Game resumed");
-
 			break;
 		case PAUSED:
 			game.setScreen(new PauseMenuScreen(game));
-			//System.out.println("Game paused");
 			break;
 		}
 		

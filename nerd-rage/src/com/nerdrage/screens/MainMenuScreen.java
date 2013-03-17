@@ -2,6 +2,10 @@ package com.nerdrage.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.assets.loaders.SoundLoader;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.nerdrage.screens.AbstractScreen.State;
 
 /**
  * Main menu screen. Will allow the user to choose between starting a new game, continuing a paused game, 
@@ -43,9 +48,15 @@ public class MainMenuScreen extends AbstractScreen {
 	float center_y=(screen_height-3*button_height)/2;
 	OrthographicCamera camera;
 	public enum GameState{PLAYED,UNPLAYED}
+	Music theme_song;
+	
 	public MainMenuScreen(Game game){
 		this.game=game;
 		spritebatch=new SpriteBatch();
+		theme_song=Gdx.audio.newMusic(Gdx.files.internal("audio/theme.mp3"));
+		theme_song.play();
+		theme_song.setLooping(false);
+		
 		camera=new OrthographicCamera(screen_width, screen_height);
 		camera.setToOrtho(false); //This points the y-axis upwards, instead of downwards
 		print("creating new camera with width: "+screen_width+" and height: "+screen_height);
@@ -63,6 +74,7 @@ public class MainMenuScreen extends AbstractScreen {
 		
 		flames_texture=new Texture(Gdx.files.internal("menu/flames.png"));
 		flames_texture_region=new TextureRegion(flames_texture, 0, 0, 512, 310);
+		
 		
 	}
 	
@@ -86,13 +98,15 @@ public class MainMenuScreen extends AbstractScreen {
 		if(Gdx.input.justTouched()){
 			if(point_in_rectangle(play_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed play");
+				theme_song.pause();
 				game.setScreen(new GameScreen(game));
 			}
 			else if(point_in_rectangle(help_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed help");
 				game.setScreen(new HelpScreen(game));
 			}
-			else if(point_in_rectangle(exit_rectangle,touched.x, touched.y)){
+			else if(point_in_rectangle(exit_rectangle,touched.x, touched.y) || Gdx.input.isKeyPressed(Keys.BACK)){
+				theme_song.dispose();
 				System.out.println("Pressed exit");
 				Gdx.app.exit();
 			}
