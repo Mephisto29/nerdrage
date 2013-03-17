@@ -1,7 +1,12 @@
 package com.nerdrage.layers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.nerdrage.levels.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,17 +33,19 @@ public class GameLayer extends AbstractReceiverLayer {
 	/**
 	 * Private constants for use in the game
 	 */
-	public static final float WALK_ANIMATION_LENGTH = 0.25f;
+	public static final float WALK_ANIMATION_LENGTH = 0.3f;
 	public static final float DAY_LENGTH_SECONDS = 600.0f;
 	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	public static final int STARTING_POSITION_X = 3;
 	public static final int STARTING_POSITION_Y = 11;
+	public static final float COMBAT_CHANCE = 0.1f;
 	
 	/**
 	 * Private instance variables
 	 */
 	private SpriteBatch batch; 
+	private Sprite character;
 	private Level currentLevel;
 	private Town town;
 	private Game game;
@@ -49,7 +56,6 @@ public class GameLayer extends AbstractReceiverLayer {
 	private static int HEIGHT = 480;
 	
 	private Stage stage;
-	private Actor character;
 	private Actor level;
 	private Actor dialogBox;
 	private Actor townActor;
@@ -78,6 +84,21 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private boolean viewingTown;
 	
+	private Music musicLoop;
+	
+	private Animation walkUpAnimation;
+	private Animation walkDownAnimation;
+	private Animation walkLeftAnimation;
+	private Animation walkRightAnimation;
+	private TextureRegion upStationary;
+	private TextureRegion downStationary;
+	private TextureRegion leftStationary;
+	private TextureRegion rightStationary;
+	
+	float stateTime = 0.0f;
+	
+	private boolean walking;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
@@ -97,11 +118,6 @@ public class GameLayer extends AbstractReceiverLayer {
 		loadLevel("house1");
 		town.setStartingHouse(STARTING_POSITION_X, STARTING_POSITION_Y, currentLevel);
 		
-		Texture nerd = new Texture(Gdx.files.internal("actors/nerd.png"));
-		character = new Image(nerd);
-		character.setPosition(WIDTH / 2 - 32.0f, HEIGHT / 2 - 32.0f);
-		stage.addActor(character);
-		
 		dialogVisible = false;
 		removingDialog = false;
 		
@@ -115,6 +131,48 @@ public class GameLayer extends AbstractReceiverLayer {
 		thirstTime = 0.0f;
 		
 		viewingTown = false;
+		
+		musicLoop = Gdx.audio.newMusic(Gdx.files.internal("audio/town_loop.mp3"));
+
+		Texture walkSheet = new Texture (Gdx.files.internal("actors/nerd_spritesheet.png"));
+		TextureRegion[][] tmp = TextureRegion.split(walkSheet, 64, 64);
+		
+		TextureRegion[] upFrames = new TextureRegion[4];
+		for (int i = 0; i < 4; i++) {
+			upFrames[i] = tmp[0][i];
+		}
+
+		TextureRegion[] rightFrames = new TextureRegion[4];
+		for (int i = 0; i < 4; i++) {
+			rightFrames[i] = tmp[1][i];
+		}
+		
+		TextureRegion[] downFrames = new TextureRegion[4];
+		for (int i = 0; i < 4; i++) {
+			downFrames[i] = tmp[2][i];
+		}
+		
+		TextureRegion[] leftFrames = new TextureRegion[4];
+		for (int i = 0; i < 4; i++) {
+			leftFrames[i] = tmp[3][i];
+		}
+
+		walkUpAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, upFrames);
+		walkDownAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, downFrames);
+		walkLeftAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, leftFrames);
+		walkRightAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, rightFrames);
+
+		upStationary = upFrames[0];
+		downStationary = downFrames[0];
+		leftStationary = leftFrames[0];
+		rightStationary = rightFrames[0];
+		
+		character = new Sprite(walkUpAnimation.getKeyFrame(0));
+		character.setPosition(WIDTH / 2 - 32.0f, HEIGHT / 2 - 32.0f);
+		
+		batch = new SpriteBatch ();
+		
+		walking = false;
 	}
 	
 	/**
@@ -161,6 +219,48 @@ public class GameLayer extends AbstractReceiverLayer {
         	days++;
         	time = time % DAY_LENGTH_SECONDS;
         }
+        
+        if (! musicLoop.isPlaying()) {
+        	
+        	musicLoop.setLooping(true);
+    		musicLoop.setVolume(0.8f);
+    		musicLoop.play();
+        }
+        
+        if (walking) {
+        	stateTime += delta;
+        }
+        else {
+        	stateTime = 0;
+        }
+        
+        switch (currentPlayerDirection) {
+        	case UP: {
+        		TextureRegion currentFrame = walkUpAnimation.getKeyFrame(stateTime, true);
+                character.setRegion(currentFrame);
+                break;
+        	}
+        	case DOWN: {
+        		TextureRegion currentFrame = walkDownAnimation.getKeyFrame(stateTime, true);
+                character.setRegion(currentFrame);
+                break;
+        	}
+        	case LEFT: {
+        		TextureRegion currentFrame = walkLeftAnimation.getKeyFrame(stateTime, true);
+                character.setRegion(currentFrame);
+                break;
+        	}
+        	case RIGHT: {
+        		TextureRegion currentFrame = walkRightAnimation.getKeyFrame(stateTime, true);
+                character.setRegion(currentFrame);
+                break;
+        	}
+        }
+        
+        batch.begin();
+        character.draw(batch);
+        batch.end();
+        
 	}
 	
 	
@@ -173,9 +273,6 @@ public class GameLayer extends AbstractReceiverLayer {
 		positionX = currentLevel.getStartingX();
 		positionY = currentLevel.getStartingY();
 		
-		System.out.println (positionX);
-		System.out.println (positionY);
-		
 		stage.addActor(level);
 	}
 	
@@ -187,9 +284,6 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void upPressed() {
 		
-
-		System.out.println (positionX + ", " + positionY);
-		
 		if (! dialogVisible) {
 		
 			// query the block above
@@ -198,24 +292,31 @@ public class GameLayer extends AbstractReceiverLayer {
 				MoveByAction action = new MoveByAction();
 				action.setAmountY(-64.0f);
 				action.setDuration(WALK_ANIMATION_LENGTH);
-				
+
 				SequenceAction seq = new SequenceAction();
 				seq.addAction(action);
 				seq.addAction(new RunnableAction () {
 					public void run () {
+						
 						synchronized (this) {
-							
-							double r = Math.random();
-							
-							if (r < currentLevel.getCombatChance()) {
-								// engage combat
-								gameScreen.enterCombat();
-							}
+							walking = false;
+							stateTime = 0;
+						}
+						
+						double r = Math.random();
+						if (r < COMBAT_CHANCE && currentLevel instanceof Town) {
+							gameScreen.enterCombat();
 						}
 					}
 				});
 				
 				level.addAction(seq);
+				
+				synchronized (this) {
+					walking = true;
+					stateTime = 0;
+				}
+				
 			
 				positionY--;
 				
@@ -223,8 +324,6 @@ public class GameLayer extends AbstractReceiverLayer {
 			else if (currentLevel.characterAtGridPosition(positionX, positionY - 1) == 'X') {
 				
 				TransitionBlock t = currentLevel.getTransitionBlockAtPosition(positionX, positionY - 1);
-				System.out.println (t);
-				System.out.println (currentLevel.getClass());
 				Level nextLevel = t.getLevelToTransitionTo();
 				
 				stage.clear();
@@ -242,7 +341,6 @@ public class GameLayer extends AbstractReceiverLayer {
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
-				stage.addActor(character);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -260,8 +358,6 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void downPressed() {
 		
-		System.out.println (positionX + ", " + positionY);
-		
 		if (! dialogVisible) {
 			// query the block below
 			if (currentLevel.characterAtGridPosition(positionX, positionY + 1) == '0') {
@@ -269,7 +365,31 @@ public class GameLayer extends AbstractReceiverLayer {
 				MoveByAction action = new MoveByAction();
 				action.setAmountY(64.0f);
 				action.setDuration(WALK_ANIMATION_LENGTH);
-				level.addAction(action);
+
+				SequenceAction seq = new SequenceAction();
+				seq.addAction(action);
+				seq.addAction(new RunnableAction () {
+					public void run () {
+						
+						synchronized (this) {
+							walking = false;
+							stateTime = 0;
+						}
+						
+						double r = Math.random();
+						if (r < COMBAT_CHANCE && currentLevel instanceof Town) {
+							gameScreen.enterCombat();
+						}
+					}
+				});
+				
+				level.addAction(seq);
+				
+				synchronized (this) {
+					walking = true;
+					stateTime = 0;
+				}
+				
 			
 				positionY++;
 			}
@@ -293,7 +413,6 @@ public class GameLayer extends AbstractReceiverLayer {
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
-				stage.addActor(character);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -310,9 +429,6 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void leftPressed() {
 		
-
-		System.out.println (positionX + ", " + positionY);
-		
 		if (! dialogVisible) {
 			// query the block to the left
 			if (currentLevel.characterAtGridPosition(positionX - 1, positionY) == '0') {
@@ -320,7 +436,29 @@ public class GameLayer extends AbstractReceiverLayer {
 				MoveByAction action = new MoveByAction();
 				action.setAmountX(64.0f);
 				action.setDuration(WALK_ANIMATION_LENGTH);
-				level.addAction(action);
+				
+				SequenceAction seq = new SequenceAction();
+				seq.addAction(action);
+				seq.addAction(new RunnableAction () {
+					public void run () {
+						synchronized(this) {
+							walking = false;
+							stateTime = 0;
+						}
+						
+						double r = Math.random();
+						if (r < COMBAT_CHANCE && currentLevel instanceof Town) {
+							gameScreen.enterCombat();
+						}
+					}
+				});
+				
+				level.addAction(seq);
+				
+				synchronized(this) {
+					walking = true;
+					stateTime = 0;
+				}
 				
 				positionX--;
 			}
@@ -344,7 +482,6 @@ public class GameLayer extends AbstractReceiverLayer {
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
-				stage.addActor(character);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -362,9 +499,6 @@ public class GameLayer extends AbstractReceiverLayer {
 	@Override
 	public void rightPressed() {
 		
-
-		System.out.println (positionX + ", " + positionY);
-
 		if (! dialogVisible) {
 			// query the block to the left
 			if (currentLevel.characterAtGridPosition(positionX + 1, positionY) == '0') {
@@ -372,7 +506,29 @@ public class GameLayer extends AbstractReceiverLayer {
 				MoveByAction action = new MoveByAction();
 				action.setAmountX(-64.0f);
 				action.setDuration(WALK_ANIMATION_LENGTH);
-				level.addAction(action);
+				
+				SequenceAction seq = new SequenceAction();
+				seq.addAction(action);
+				seq.addAction(new RunnableAction () {
+					public void run () {
+						synchronized(this) {
+							walking = false;
+							stateTime = 0;
+						}
+						
+						double r = Math.random();
+						if (r < COMBAT_CHANCE && currentLevel instanceof Town) {
+							gameScreen.enterCombat();
+						}
+					}
+				});
+				
+				level.addAction(seq);
+				
+				synchronized(this) {
+					walking = true;
+					stateTime = 0;
+				}
 				
 				positionX++;
 			}
@@ -396,7 +552,6 @@ public class GameLayer extends AbstractReceiverLayer {
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
-				stage.addActor(character);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -559,12 +714,7 @@ public class GameLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void startPressed() {
-//<<<<<<< Updated upstream
-		System.out.println ("S");
-		//game.setScreen(new ResumeMainMenuScreen(game));
-//=======
 		game.setScreen(new PauseMenuScreen(game));
-//>>>>>>> Stashed changes
 	}
 
 }

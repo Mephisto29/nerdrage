@@ -12,6 +12,22 @@ public class Player
 	float nerdRage;
 	boolean inRage;
 	
+	public static final float WALK_ANIMATION_LENGTH = 0.25f;
+	
+	
+	public Player () {
+		
+		health = 100;
+		equipDamage = 0;
+		level = 1;
+		experience = 0;
+		damage = 10;
+		thirst = 100.0f;
+		hunger = 100.0f;
+		nerdRage = 0;
+		inRage = false;
+	}
+	
 	
 	public int getHealth()
 	{
@@ -93,19 +109,5 @@ public class Player
 	
 	public float getHunger () {
 		return hunger;
-	}
-	
-	
-	public Player()
-	{
-		health = 100;
-		equipDamage = 0;
-		level = 1;
-		experience = 0;
-		damage = 10;
-		thirst = 100.0f;
-		hunger = 100.0f;
-		nerdRage = 0;
-		inRage = false;
 	}
 }

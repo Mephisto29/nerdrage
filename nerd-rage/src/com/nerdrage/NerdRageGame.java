@@ -17,7 +17,7 @@ public class NerdRageGame extends Game {
 	public static final String VERSION = "v0.01";
 	public static final String GAME_NAME = "Nerd Rage";
 	public static FPSLogger fpsLogger;
-	
+
 	@Override
 	public void create() {		
 		fpsLogger = new FPSLogger();

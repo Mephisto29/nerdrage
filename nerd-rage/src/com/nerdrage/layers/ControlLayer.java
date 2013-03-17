@@ -102,7 +102,7 @@ public class ControlLayer extends AbstractLayer {
 	/**
 	 * Public variables to control rate at which input is received
 	 */
-	public static final long RECEIVER_DELAY = 300;
+	public static final long RECEIVER_DELAY = 400;
 	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing

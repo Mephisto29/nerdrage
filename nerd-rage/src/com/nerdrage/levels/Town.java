@@ -88,6 +88,6 @@ public class Town extends Level {
 	 * @return The probability of encountering a jock
 	 */
 	public float getCombatChance () {
-		return 0.1f;
+		return 0.5f;
 	}
 }
