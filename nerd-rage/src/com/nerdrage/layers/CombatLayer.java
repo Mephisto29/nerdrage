@@ -328,8 +328,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 			else if(itemMenu)
 			{
 				font.draw(batch, "Water", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
+				font.draw(batch, "" +player.waters, Gdx.graphics.getWidth() / 2.0f +80, 125f);
 				font.draw(batch, "Food", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				font.draw(batch, "" +player.foods, Gdx.graphics.getWidth() / 2.0f + 80, 95f);
 				font.draw(batch, "Laptop", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
+				font.draw(batch, "" +player.batteries, Gdx.graphics.getWidth() / 2.0f +80, 65f);
 			}
 			else
 			{
@@ -473,39 +476,41 @@ public class CombatLayer extends AbstractReceiverLayer {
 				}
 				else if(itemMenu == true)
 				{
-					if(position == 0)
+					if(position == 0 && (player.waters > 0))
 					{
-						System.out.println("USE WATER");
-						enemy.setDamage();
-						playerTurn = false;
-						playerstep = true;
-						usewater = true;
+							System.out.println("USE WATER");
+							enemy.setDamage();
+							playerTurn = false;
+							playerstep = true;
+							usewater = true;
+							player.waters--;
 
 
-
-						text = "You Throw water at the Jock\n";
-						text = text + "The Jock is more sober, he does less damage now";
-
+							text = "You Throw water at the Jock\n";
+							text = text + "The Jock is more sober, he does less damage now";
 					}
-					else if (position == 1)
+					else if (position == 1 && (player.foods > 0))
 					{
-						System.out.println("USE FOOD");
-						runawaychance = runawaychance + 33;
-						playerTurn = false;
-						usedFood = true;
+							System.out.println("USE FOOD");
+							runawaychance = runawaychance + 33;
+							playerTurn = false;
+							usedFood = true;
+							player.foods--;
 
-						text = "You Trow food at the Jock";
+							text = "You Trow food at the Jock";
 					}
-					else if (position == 2)
+					else if (position == 2 && (player.batteries > 0))
 					{
-						System.out.println("USE LAPTOP");
-						//enemy.setDamage();
-						playerTurn = false;
-						playerstep = true;
-						bonusTurn = 2;
-						hacked = true;
 
-						text = "You use a battery to start up your laptop";
+							System.out.println("USE LAPTOP");
+							//enemy.setDamage();
+							playerTurn = false;
+							playerstep = true;
+							bonusTurn = 2;
+							hacked = true;
+							player.batteries--;
+
+							text = "You use a battery to start up your laptop";
 					}
 					itemMenu = false;
 				}
@@ -663,7 +668,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					{inRage = true;
 					player.setInRage();
 					bonusTurn += 2;}
-					
+
 					playerstep = false;
 					step1 = false;
 					step2 = false;

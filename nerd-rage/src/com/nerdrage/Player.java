@@ -1,5 +1,7 @@
 package com.nerdrage;
 
+import java.util.Vector;
+
 public class Player 
 {
 	int health;
@@ -11,6 +13,13 @@ public class Player
 	float hunger;
 	float nerdRage;
 	boolean inRage;
+	
+	public int foods = 0;
+	public int waters = 0;
+	public int batteries = 0;
+	
+	public Vector<String> items;
+	public int nrOfItems;
 	
 	
 	public int getHealth()
@@ -35,11 +44,16 @@ public class Player
 		inRage = false;
 	}
 	
+	public void resetHealth()
+	{
+		health = 100;
+	}
+	
 	public void setHealth(int damage)
 	{
 		health = health - damage;
 		
-		nerdRage += damage *4;//*(Math.random()* 3);
+		nerdRage += damage*(Math.random()* 3);
 	}
 	
 	public int getLevel()
@@ -95,6 +109,25 @@ public class Player
 		return hunger;
 	}
 	
+	public void addItem(String item)
+	{
+		
+		if(nrOfItems < 15)
+		{
+			System.out.println("PICKED UP : " + item);
+			items.add(item);
+			if(item.equals("food"))
+				foods++;
+			else if(item.equals("water"))
+				waters++;
+			else if (item.equals("batteries"))
+				batteries++;
+		}
+		else
+			System.out.println("YOU DO NOT HAVE SPACE NERD");
+	}
+
+	
 	
 	public Player()
 	{
@@ -107,5 +140,7 @@ public class Player
 		hunger = 100.0f;
 		nerdRage = 0;
 		inRage = false;
+		items = new Vector<String>();
+		nrOfItems = 0;
 	}
 }

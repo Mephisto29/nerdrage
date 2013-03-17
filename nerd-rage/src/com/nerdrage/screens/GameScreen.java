@@ -23,15 +23,20 @@ public class GameScreen extends AbstractScreen {
 	private GameLayer gameLayer;
 	private CombatLayer combatLayer;
 	private ControlLayer controlLayer;
+	private ItemLayer inventory;
 	private Game game;
 	public Player player;
 	private boolean inCombat = false;
+	private PauseMenuScreen pauseMenu; 
 
 	public GameScreen (Game game) {
 		
 		player = new Player();
 		
-		gameLayer = new GameLayer(game, player, this);
+		inventory = new ItemLayer(player);
+		
+		
+		gameLayer = new GameLayer(game, player, this, inventory);
 		//combatLayer = new CombatLayer(player, this);
 		inCombat = false;
 
@@ -45,8 +50,9 @@ public class GameScreen extends AbstractScreen {
 			controlLayer.setReceiver (gameLayer);
 			controlLayer.setStartButtonVisible(true);
 		}
-		
 		gameLayer.setControlLayer(controlLayer);
+		pauseMenu = new PauseMenuScreen(gameLayer, controlLayer, inventory, game, this);
+		
 	}
 	
 	@Override
@@ -78,7 +84,7 @@ public class GameScreen extends AbstractScreen {
 
 			break;
 		case PAUSED:
-			game.setScreen(new PauseMenuScreen(game));
+			game.setScreen(new PauseMenuScreen(gameLayer, controlLayer, inventory, game, this));
 			//System.out.println("Game paused");
 			break;
 		}
@@ -86,7 +92,7 @@ public class GameScreen extends AbstractScreen {
 		//override back button of phone to go back to pause menu
 		if(Gdx.input.isKeyPressed(Keys.BACK)){
 			game_state=State.PAUSED;
-			game.setScreen(new PauseMenuScreen(game));
+			game.setScreen(new PauseMenuScreen(gameLayer, controlLayer, inventory, game, this));
 		}
 	}
 		
