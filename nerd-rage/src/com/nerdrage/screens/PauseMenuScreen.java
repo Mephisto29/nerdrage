@@ -111,8 +111,8 @@ public class PauseMenuScreen extends AbstractScreen {
 			else if(point_in_rectangle(equipment_rectangle,touched.x, touched.y)){
 				System.out.println("Pressed equipment");
 			}
-			else{
-				System.out.println("Pressed back to menu");
+			else if(point_in_rectangle(back_to_menu_rectangle,touched.x, touched.y)){
+				 System.out.println("Pressed back to menu");
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}
