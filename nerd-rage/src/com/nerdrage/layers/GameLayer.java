@@ -6,7 +6,7 @@ import com.nerdrage.levels.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nerdrage.screens.MainMenuScreen;
-import com.nerdrage.screens.ResumeMainMenuScreen;
+import com.nerdrage.screens.PauseMenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -559,8 +559,12 @@ public class GameLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void startPressed() {
+//<<<<<<< Updated upstream
 		System.out.println ("S");
 		//game.setScreen(new ResumeMainMenuScreen(game));
+//=======
+		game.setScreen(new PauseMenuScreen(game));
+//>>>>>>> Stashed changes
 	}
 
 }
