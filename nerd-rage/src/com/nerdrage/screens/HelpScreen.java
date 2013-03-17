@@ -39,8 +39,8 @@ public class HelpScreen extends AbstractScreen {
 	float screen_height = Gdx.graphics.getHeight();
 	float button_width = 256;
 	float button_height = 64;
-	float center = (screen_width - button_width) / 2;
-	float center_y = (screen_height-button_height) / 6;
+	float center = /*(screen_width - button_width) / 2*/ 500;
+	float center_y = /*(screen_height-button_height) / 6*/30;
 	OrthographicCamera camera;
 
 	public HelpScreen(Game game) {
@@ -56,7 +56,7 @@ public class HelpScreen extends AbstractScreen {
 		back_sprite = new Sprite(back_texture);
 		back_sprite.setPosition(center, center_y);
 
-		flames_texture = new Texture(Gdx.files.internal("menu/flames.png"));
+		flames_texture = new Texture(Gdx.files.internal("menu/helpscreen.png"));
 		flames_texture_region = new TextureRegion(flames_texture, 0, 0, 512,
 				310);
 
