@@ -53,7 +53,7 @@ public class MainMenuScreen extends AbstractScreen {
 	public MainMenuScreen(Game game){
 		this.game=game;
 		spritebatch=new SpriteBatch();
-		theme_song=Gdx.audio.newMusic(Gdx.files.internal("audio/theme.mp3"));
+		theme_song=Gdx.audio.newMusic(Gdx.files.internal("audio/theme2.mp3"));
 		theme_song.play();
 		theme_song.setLooping(false);
 		
