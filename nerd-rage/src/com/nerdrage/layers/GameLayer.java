@@ -1,6 +1,8 @@
 package com.nerdrage.layers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nerdrage.levels.*;
 import com.badlogic.gdx.Game;
@@ -78,6 +80,8 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private boolean viewingTown;
 	
+	private Music musicLoop;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
@@ -115,6 +119,8 @@ public class GameLayer extends AbstractReceiverLayer {
 		thirstTime = 0.0f;
 		
 		viewingTown = false;
+		
+		musicLoop = Gdx.audio.newMusic(Gdx.files.internal("audio/town_loop.mp3"));
 	}
 	
 	/**
@@ -160,6 +166,13 @@ public class GameLayer extends AbstractReceiverLayer {
         if ((time / DAY_LENGTH_SECONDS) > 1) {
         	days++;
         	time = time % DAY_LENGTH_SECONDS;
+        }
+        
+        if (! musicLoop.isPlaying()) {
+        	
+        	musicLoop.setLooping(true);
+    		musicLoop.setVolume(0.8f);
+    		musicLoop.play();
         }
 	}
 	
