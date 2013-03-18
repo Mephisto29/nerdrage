@@ -42,8 +42,8 @@ public class GameScreen extends AbstractScreen {
 		
 		
 		gameLayer = new GameLayer(game, player, this, inventory);
-		combatLayer = new CombatLayer(player, this);
-		inCombat = true;
+		//combatLayer = new CombatLayer(player, this);
+		inCombat = false;
 		controlLayer = new ControlLayer(player);
 
 		if (inCombat) {

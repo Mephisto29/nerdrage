@@ -83,18 +83,10 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private Player player;
 	
-	private boolean viewingTown;
-	
-	
-	
 	private Animation walkUpAnimation;
 	private Animation walkDownAnimation;
 	private Animation walkLeftAnimation;
 	private Animation walkRightAnimation;
-	private TextureRegion upStationary;
-	private TextureRegion downStationary;
-	private TextureRegion leftStationary;
-	private TextureRegion rightStationary;
 	
 	float stateTime = 0.0f;
 	
@@ -132,9 +124,6 @@ public class GameLayer extends AbstractReceiverLayer {
 		hungerTime = 0.0f;
 		thirstTime = 0.0f;
 		
-		viewingTown = false;
-		
-		
 
 		Texture walkSheet = new Texture (Gdx.files.internal("actors/nerd_spritesheet.png"));
 		TextureRegion[][] tmp = TextureRegion.split(walkSheet, 64, 64);
@@ -163,11 +152,6 @@ public class GameLayer extends AbstractReceiverLayer {
 		walkDownAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, downFrames);
 		walkLeftAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, leftFrames);
 		walkRightAnimation = new Animation(WALK_ANIMATION_LENGTH / 4.0f, rightFrames);
-
-		upStationary = upFrames[0];
-		downStationary = downFrames[0];
-		leftStationary = leftFrames[0];
-		rightStationary = rightFrames[0];
 		
 		character = new Sprite(walkUpAnimation.getKeyFrame(0));
 		character.setPosition(WIDTH / 2 - 32.0f, HEIGHT / 2 - 32.0f);
