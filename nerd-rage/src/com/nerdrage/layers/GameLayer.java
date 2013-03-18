@@ -592,14 +592,48 @@ public class GameLayer extends AbstractReceiverLayer {
 				dialogBox.setPosition(WIDTH / 2.0f - 256.0f, -128.0f);
 				stage.addActor(dialogBox);
 				
-				String text;
+				String text = "";
 				
 				if (g.isItemPickup()) {
 					Item item = g.getItem();
 					
 					if (item != null) {
-						text = "You picked up item " + item.getId();
-						player.addItem("food");
+						
+						if(item.getId().equals("id1"))
+						{
+							float equipable = (float) Math.random();
+							if(equipable < 0.3)
+							{
+								text = "You pick up a Keyboard and strap it to your chest, increasing your defence.";
+								player.defence+=2;
+							}
+							else if(equipable < 0.6)
+							{
+								text = "You picked up a mouse, swinging it around you feel the power!!";
+								player.equipDamage+=1;
+							}
+							else
+							{
+								text = "You picked up a Yoda Action figure.  He teaches you the way of the force";
+								player.confuseChance +=10;
+							}
+						}
+						else if(item.getId().equals("id2"))
+						{
+							player.addItem("food");
+							text = "You picked up some nom-noms";
+						}
+						else if(item.getId().equals("id3"))
+						{
+							player.addItem("water");
+							text = "You picked up a can of POWERTHi... water";
+						}
+						else if(item.getId().equals("id4"))
+						{
+							player.addItem("battery");
+							text = "You picked up a battery";
+						}
+						
 					}
 					else {
 						text = "Meh... found nothing.";

@@ -122,6 +122,7 @@ public class PauseMenuScreen extends AbstractScreen {
 				//Handle state variables here
 				game.setScreen(screen);
 				controlLayer.setReceiver(gameLayer);
+				controlLayer.setStartButtonVisible(true);
 			}
 			else if(point_in_rectangle(restart_rectangle,touched.x, touched.y)){
 				game.setScreen(new GameScreen(game));
@@ -144,6 +145,8 @@ public class PauseMenuScreen extends AbstractScreen {
 				System.out.println("Pressed equipment");
 			}
 			else if(point_in_rectangle(MainMenurectangle,touched.x, touched.y)){
+				
+				
 				System.out.println("Pressed back to menu");
 				screen.stopMusic();
 				game.setScreen(new MainMenuScreen(game));

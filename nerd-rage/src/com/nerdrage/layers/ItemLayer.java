@@ -156,7 +156,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 			}
 			else if(player.items.elementAt(i).equals("water"))
 			{
-				waterSprite.setPosition(30+(120*(i-(5*itemy))), 256 - (120 * itemy));
+				waterSprite.setPosition(125+(120*(i-(5*itemy))), 351 - (120 * itemy ));
 				itemx++;
 				if(itemx ==4)
 				{
@@ -167,7 +167,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 			}
 			else if(player.items.elementAt(i).equals("battery"))
 			{
-				batterySprite.setPosition(30+(120*(i-(5*itemy))), 256 - (120 * itemy));
+				batterySprite.setPosition(125+(120*(i-(5*itemy))), 351 - (120 * itemy ));
 				itemx++;
 				if(itemx ==4)
 				{
@@ -178,7 +178,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 			}
 			else if(player.items.elementAt(i).equals("key1"))
 			{
-				key1sprite.setPosition(30+(120*(i-(5*itemy))), 256 - (120 * itemy));
+				key1sprite.setPosition(125+(120*(i-(5*itemy))), 351 - (120 * itemy ));
 				itemx++;
 				if(itemx ==4)
 				{
@@ -189,7 +189,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 			}
 			else if(player.items.elementAt(i).equals("key2"))
 			{
-				key2sprite.setPosition(30+(120*(i-(5*itemy))), 256 - (120 * itemy));
+				key2sprite.setPosition(125+(120*(i-(5*itemy))), 351 - (120 * itemy ));
 				itemx++;
 				if(itemx ==4)
 				{
@@ -338,6 +338,16 @@ public class ItemLayer extends AbstractReceiverLayer {
 						text = "Do you wish to eath this food?\n"
 								+ "...  YES              ...  NO";
 						useable = true;
+					}
+					else if(player.items.elementAt(positionx + (positiony*4)).equals("water"))
+					{
+						text = "Do you wish to drink this water?\n"
+								+ "...  YES              ...  NO";
+						useable = true;
+					}
+					if(player.items.elementAt(positionx + (positiony*4)).equals("battery"))
+					{
+						text = "A battery cannot be eaten.... and acid kills";
 					}
 				}
 				else
