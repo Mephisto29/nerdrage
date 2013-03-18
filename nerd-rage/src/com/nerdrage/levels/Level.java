@@ -58,7 +58,7 @@ public class Level {
 			String[] arr = line.split(",");
 			
 			width = Integer.valueOf(arr[0]);
-			height = Integer.valueOf(arr[0]);
+			height = Integer.valueOf(arr[1]);
 		
 			levelGrid = new char[height][width];
 			
@@ -66,12 +66,14 @@ public class Level {
 			for (int y = 0; y < height; y++) {
 				line = input.readLine();
 				
+				System.out.println (line);
+				
 				for (int x = 0; x < width; x++)  {
 					levelGrid[y][x] = line.charAt(x);
 					if (line.charAt(x) == 'X') {
 						startingX = x;
 						startingY = y - 1;
-						TransitionBlock t = new TransitionBlock();
+						TransitionBlock t = new TransitionBlock(x, y);
 						transitionBlocks.put("X:" + x + "Y:" + y, t);
 					}
 				}
