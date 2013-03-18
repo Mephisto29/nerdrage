@@ -138,7 +138,7 @@ public class Player
 
 	public Player()
 	{
-		health = 1;
+		health = 100;
 		equipDamage = 0;
 		confuseChance = 33;
 		level = 1;
