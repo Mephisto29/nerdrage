@@ -39,7 +39,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	public static final int STARTING_POSITION_X = 3;
 	public static final int STARTING_POSITION_Y = 11;
-	public static final float COMBAT_CHANCE = 0.0f;
+	public static final float COMBAT_CHANCE = 0.1f;
 	
 	/**
 	 * Private instance variables
