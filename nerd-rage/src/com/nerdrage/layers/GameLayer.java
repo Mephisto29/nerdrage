@@ -34,12 +34,12 @@ public class GameLayer extends AbstractReceiverLayer {
 	 * Private constants for use in the game
 	 */
 	public static final float WALK_ANIMATION_LENGTH = 0.3f;
-	public static final float DAY_LENGTH_SECONDS = 60.0f;
+	public static final float DAY_LENGTH_SECONDS = 300.0f;
 	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	public static final int STARTING_POSITION_X = 3;
 	public static final int STARTING_POSITION_Y = 11;
-	public static final float COMBAT_CHANCE = 0.1f;
+	public static float COMBAT_CHANCE = 0.2f;
 	
 	/**
 	 * Private instance variables
@@ -224,14 +224,18 @@ public class GameLayer extends AbstractReceiverLayer {
         }
         else if (time >= (DAY_LENGTH_SECONDS * 7.0f / 8.0f)) {
         	filter.getColor().a = 0.5f;
+        	COMBAT_CHANCE = 0.05f;
         }
         else if (time >= (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) {
         	// MAAAAATTTTTHHHHHH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         	float a = 0.5f * (time - (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) / (DAY_LENGTH_SECONDS * 0.25f);
         	filter.getColor().a = a;
+        	
+        	COMBAT_CHANCE = 0.05f + ((1.0f - (2.0f * a)) * 0.15f);
         }
         else if (time >= (DAY_LENGTH_SECONDS * 3.0f / 8.0f)) {
         	filter.getColor().a = 0.0f;
+        	COMBAT_CHANCE = 0.2f;
         }
         else if (time >= (DAY_LENGTH_SECONDS / 8.0f)) {
         	float a = 0.5f - 0.5f * (time - (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) / (DAY_LENGTH_SECONDS * 0.25f);
@@ -239,14 +243,17 @@ public class GameLayer extends AbstractReceiverLayer {
         		a -= Math.floor(a);
         	}
         	filter.getColor().a = a;
+        	
+        	COMBAT_CHANCE = 0.2f - ((2.0f * a) * 0.15f);
+        	
         }
         else {
         	filter.getColor().a = 0.5f;
+        	COMBAT_CHANCE = 0.05f;
         }
         
-
-    	System.out.println (filter.getColor().a + "    " + (filter.isVisible() ? "visible" : "not"));
         
+        System.out.println (COMBAT_CHANCE);
         
         if (walking) {
         	stateTime += delta;
