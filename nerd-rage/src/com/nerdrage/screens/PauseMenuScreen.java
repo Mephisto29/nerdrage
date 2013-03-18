@@ -148,6 +148,7 @@ public class PauseMenuScreen extends AbstractScreen {
 				
 				
 				System.out.println("Pressed back to menu");
+				screen.stopMusic();
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}
