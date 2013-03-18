@@ -34,7 +34,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	 * Private constants for use in the game
 	 */
 	public static final float WALK_ANIMATION_LENGTH = 0.3f;
-	public static final float DAY_LENGTH_SECONDS = 10.0f;
+	public static final float DAY_LENGTH_SECONDS = 600.0f;
 	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	public static final int STARTING_POSITION_X = 3;
