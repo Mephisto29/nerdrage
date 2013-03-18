@@ -34,7 +34,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	 * Private constants for use in the game
 	 */
 	public static final float WALK_ANIMATION_LENGTH = 0.3f;
-	public static final float DAY_LENGTH_SECONDS = 600.0f;
+	public static final float DAY_LENGTH_SECONDS = 10.0f;
 	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	public static final int STARTING_POSITION_X = 3;
@@ -84,6 +84,8 @@ public class GameLayer extends AbstractReceiverLayer {
 	private Player player;
 	
 	private boolean viewingTown;
+	
+	Win_Lose_Screen gameEnd;
 	
 	private Music musicLoop;
 	
@@ -191,6 +193,22 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void draw (float delta) {
+		
+		if(days == 10 || player.getHealth() <=0 || player.getThirst() <= 0 || player.getHunger()<=0)
+		{
+			if(days==10)
+			{
+				gameEnd = new Win_Lose_Screen(game, 0, player);
+				gameEnd.setDays(10);
+			}
+			else
+			{
+				gameEnd = new Win_Lose_Screen(game, 1, player);
+				gameEnd.setDays(days);
+			}
+			
+			game.setScreen(gameEnd);
+		}
         // update the actors
         stage.act( delta );
 

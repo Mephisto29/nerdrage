@@ -478,39 +478,39 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					if(position == 0 && (player.waters > 0))
 					{
-							System.out.println("USE WATER");
-							enemy.setDamage();
-							playerTurn = false;
-							playerstep = true;
-							usewater = true;
-							player.waters--;
+						System.out.println("USE WATER");
+						enemy.setDamage();
+						playerTurn = false;
+						playerstep = true;
+						usewater = true;
+						player.waters--;
 
 
-							text = "You Throw water at the Jock\n";
-							text = text + "The Jock is more sober, he does less damage now";
+						text = "You Throw water at the Jock\n";
+						text = text + "The Jock is more sober, he does less damage now";
 					}
 					else if (position == 1 && (player.foods > 0))
 					{
-							System.out.println("USE FOOD");
-							runawaychance = runawaychance + 33;
-							playerTurn = false;
-							usedFood = true;
-							player.foods--;
+						System.out.println("USE FOOD");
+						runawaychance = runawaychance + 33;
+						playerTurn = false;
+						usedFood = true;
+						player.foods--;
 
-							text = "You Trow food at the Jock";
+						text = "You Trow food at the Jock";
 					}
 					else if (position == 2 && (player.batteries > 0))
 					{
 
-							System.out.println("USE LAPTOP");
-							//enemy.setDamage();
-							playerTurn = false;
-							playerstep = true;
-							bonusTurn += 2;
-							hacked = true;
-							player.batteries--;
+						System.out.println("USE LAPTOP");
+						//enemy.setDamage();
+						playerTurn = false;
+						playerstep = true;
+						bonusTurn += 2;
+						hacked = true;
+						player.batteries--;
 
-							text = "You use a battery to start up your laptop";
+						text = "You use a battery to start up your laptop";
 					}
 					itemMenu = false;
 				}
@@ -554,56 +554,59 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					playerstep = false;
 					step1 = true;
-
-					if(bonusTurn > 0)
+					if(enemy.getHealth()>0)
 					{
-						bonusTurn--;
-						if(hacked)
-						{
-							text = "You use your Laptop to hack the Jock's phone";
-							hacked = false;
-						}
-						else
-						{
-							playerTurn = true;
-							step1 = false;
 
-						}
-						if(bonusTurn == 0)
+						if(bonusTurn > 0)
 						{
-							inRage = false;
-							player.setRage();
-						}
-					}
-					else
-					{
-						enemydamage = enemy.getDamage();
-						enemyAttack = enemy.getAttack();
-
-						if(ranAway)
-						{
-							text = "You have successfully evaded the Jock";
-							//combatOver = true;
-						}
-						else if(confused)
-						{
-							text =  "The Jock is super confused\n";
-							confuse = Math.random()*100;
-							if (confuse < confusedAttack)
+							bonusTurn--;
+							if(hacked)
 							{
-								enemy.setHealth(enemy.getDamage());
-								text = text + "Jock hurts itself in its confusion";
-								step2 = true;
-								step1 = false;
+								text = "You use your Laptop to hack the Jock's phone";
+								hacked = false;
 							}
 							else
 							{
-								text = text + "Jock uses " + enemyAttack;
+								playerTurn = true;
+								step1 = false;
+
+							}
+							if(bonusTurn == 0)
+							{
+								inRage = false;
+								player.setRage();
 							}
 						}
 						else
 						{
-							text = "Jock uses " + enemyAttack;
+							enemydamage = enemy.getDamage();
+							enemyAttack = enemy.getAttack();
+
+							if(ranAway)
+							{
+								text = "You have successfully evaded the Jock";
+								//combatOver = true;
+							}
+							else if(confused)
+							{
+								text =  "The Jock is super confused\n";
+								confuse = Math.random()*100;
+								if (confuse < confusedAttack)
+								{
+									enemy.setHealth(enemy.getDamage());
+									text = text + "Jock hurts itself in its confusion";
+									step2 = true;
+									step1 = false;
+								}
+								else
+								{
+									text = text + "Jock uses " + enemyAttack;
+								}
+							}
+							else
+							{
+								text = "Jock uses " + enemyAttack;
+							}
 						}
 					}
 
@@ -612,55 +615,58 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					step1 = false;
 					step2 = true;
+					if(enemy.getHealth()>0)
+					{
 
-					if(ranAway)
-					{
-						text = "YOU GAIN NOTHING WIMP!";
-						combatOver = true;
-					}
+						if(ranAway)
+						{
+							text = "YOU GAIN NOTHING WIMP!";
+							combatOver = true;
+						}
 
-					else if(bonusTurn > 0)
-					{
-						text = "The Jock tries to fix his phone for 2 rounds";
-					}
+						else if(bonusTurn > 0)
+						{
+							text = "The Jock tries to fix his phone for 2 rounds";
+						}
 
-					else if(usedFood)
-					{
-						text = "The Jock Munches the food";
-					}
-					else if(confused && !usedFood)
-					{
-						if (confuse < confusedAttack)
+						else if(usedFood)
 						{
-							//step3 = true;
+							text = "The Jock Munches the food";
 						}
-						else if(enemyAttack.equals("FLEX!!!!!"))
+						else if(confused && !usedFood)
 						{
-							text = "The Jock flexes his muscles! His damage is now doubled!!!!";
+							if (confuse < confusedAttack)
+							{
+								//step3 = true;
+							}
+							else if(enemyAttack.equals("FLEX!!!!!"))
+							{
+								text = "The Jock flexes his muscles! His damage is now doubled!!!!";
+							}
+							else
+							{
+								int damage = enemy.getDamage();
+								player.setHealth(enemydamage);
+								text = "You recieve " + enemydamage + " points of damage";
+							}
 						}
-						else
+						else if(!usedFood )	
 						{
-							int damage = enemy.getDamage();
-							player.setHealth(enemydamage);
-							text = "You recieve " + enemydamage + " points of damage";
+							if(enemyAttack.equals("FLEX!!!!!"))
+							{
+								text = "The Jock flexes his muscles! His damage is increased!!!!";
+							}
+							else
+							{
+								player.setHealth(enemydamage);
+								text = "You recieve " + enemydamage + " points of damage";
+							}
 						}
-					}
-					else if(!usedFood )	
-					{
-						if(enemyAttack.equals("FLEX!!!!!"))
-						{
-							text = "The Jock flexes his muscles! His damage is increased!!!!";
-						}
-						else
-						{
-							player.setHealth(enemydamage);
-							text = "You recieve " + enemydamage + " points of damage";
-						}
-					}
 
-					if(player.getHealth() <= 0 || enemy.getHealth() <=0)
-					{
-						step3 = true;
+						if(player.getHealth() <= 0 || enemy.getHealth() <=0)
+						{
+							step3 = true;
+						}
 					}
 				}
 				else if (step2)
@@ -697,8 +703,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					if(player.getHealth() > 0)
 					{
 						player.setExperience(experience);
-						text = "Congradulations you defeated a Jock\n";
-						text = text + "You recieve "+ experience +" points of experience";
+						text = "Congradulations you have defeated a Jock and gain "+ experience +" points of experience";
 					}
 					else
 						text = "GG!!  You have been pummeled to death";
