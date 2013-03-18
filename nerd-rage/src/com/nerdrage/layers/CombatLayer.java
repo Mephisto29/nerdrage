@@ -119,6 +119,11 @@ public class CombatLayer extends AbstractReceiverLayer {
 	int experience = 0;
 
 	int bonusTurn = 0;
+	
+	private Label firstOptionLabel;
+	private Label secondOptionLabel;
+	private Label thirdOptionLabel;
+	
 
 	public CombatLayer (Player player1, GameScreen gameScreen) {
 
@@ -141,9 +146,10 @@ public class CombatLayer extends AbstractReceiverLayer {
 		rageScreenSprite = new Sprite (rageScreenTexture);
 		battleScreenSprite.setPosition(5.0f, 5.0f);
 
-		battleSelectionBoxTexture = new Texture (Gdx.files.internal("data/Battleselectionbox.png"));
+		battleSelectionBoxTexture = new Texture (Gdx.files.internal("ui/SelectionBox.png"));
+		TextureRegion region = new TextureRegion(battleSelectionBoxTexture, 192, 32);
 		battleSelectionBoxSprite = new Sprite (battleSelectionBoxTexture);
-		battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -10 , 102f);
+		battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 96.0f , 115f);
 
 		healthBoxTexture1 = new Texture (Gdx.files.internal("data/Healthblock1.png"));
 		healthBoxTexture2 = new Texture (Gdx.files.internal("data/Healthblock2.png"));
@@ -199,8 +205,24 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 
 		font = new BitmapFont(Gdx.files.internal("fonts/nerd.fnt"), false);
-		font.setColor(Color.WHITE);
 
+		firstOptionLabel = new Label("".subSequence(0, 0), new LabelStyle(font, Color.WHITE));
+		firstOptionLabel.setPosition(Gdx.graphics.getWidth() / 2.0f - 80.0f, 125f);
+		firstOptionLabel.setAlignment(Align.center);
+		firstOptionLabel.setWidth(160.0f);
+		secondOptionLabel = new Label("".subSequence(0, 0), new LabelStyle(font, Color.WHITE));
+		secondOptionLabel.setPosition(Gdx.graphics.getWidth() / 2.0f - 80.0f, 85f);
+		secondOptionLabel.setAlignment(Align.center);
+		secondOptionLabel.setWidth(160.0f);
+		thirdOptionLabel = new Label("".subSequence(0, 0), new LabelStyle(font, Color.WHITE));
+		thirdOptionLabel.setPosition(Gdx.graphics.getWidth() / 2.0f - 80.0f, 45f);
+		thirdOptionLabel.setAlignment(Align.center);
+		thirdOptionLabel.setWidth(160.0f);
+
+		stage.addActor(firstOptionLabel);
+		stage.addActor(secondOptionLabel);
+		stage.addActor(thirdOptionLabel);
+		
 	}
 
 	@Override
@@ -220,15 +242,15 @@ public class CombatLayer extends AbstractReceiverLayer {
 		{
 			if(position == 0)
 			{
-				battleSelectionBoxSprite.setPosition( Gdx.graphics.getWidth() / 2.0f -22, 102f);
+				battleSelectionBoxSprite.setPosition( Gdx.graphics.getWidth() / 2.0f - 96, 107f);
 			}
 			else if(position == 1)
 			{
-				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -22 , 72f);
+				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 96 , 67f);
 			}
 			else if(position == 2)
 			{
-				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f -22, 42f);		
+				battleSelectionBoxSprite.setPosition(Gdx.graphics.getWidth() / 2.0f - 96, 27f);		
 			}
 
 			battleSelectionBoxSprite.draw(batch,1f);
@@ -322,25 +344,39 @@ public class CombatLayer extends AbstractReceiverLayer {
 		{
 			if(attackMenu)
 			{
-				font.draw(batch, "Normal", Gdx.graphics.getWidth() /2.0f - 12, 125f);
-				font.draw(batch, "Special", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
-				font.draw(batch, "Critical", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
+				//font.draw(batch, "Normal", Gdx.graphics.getWidth() /2.0f - 12, 125f);
+				//font.draw(batch, "Special", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				//font.draw(batch, "Critical", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
+				firstOptionLabel.setText("Normal");
+				secondOptionLabel.setText("Special");
+				thirdOptionLabel.setText("Critical");
 			}
 			else if(itemMenu)
 			{
-				font.draw(batch, "Water", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
-				font.draw(batch, "" +player.waters, Gdx.graphics.getWidth() / 2.0f +80, 125f);
-				font.draw(batch, "Food", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
-				font.draw(batch, "" +player.foods, Gdx.graphics.getWidth() / 2.0f + 80, 95f);
-				font.draw(batch, "Laptop", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
-				font.draw(batch, "" +player.batteries, Gdx.graphics.getWidth() / 2.0f +80, 65f);
+				//font.draw(batch, "Water", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
+				//font.draw(batch, "" +player.waters, Gdx.graphics.getWidth() / 2.0f +80, 125f);
+				//font.draw(batch, "Food", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				//font.draw(batch, "" +player.foods, Gdx.graphics.getWidth() / 2.0f + 80, 95f);
+				//font.draw(batch, "Laptop", Gdx.graphics.getWidth() / 2.0f - 12, 65f);
+				//font.draw(batch, "" +player.batteries, Gdx.graphics.getWidth() / 2.0f +80, 65f);
+				firstOptionLabel.setText("Water: " + player.waters);
+				secondOptionLabel.setText("Food: " + player.foods);
+				thirdOptionLabel.setText("Laptop: " + player.batteries);
 			}
 			else
 			{
-				font.draw(batch, "Attack", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
-				font.draw(batch, "Item", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
-				font.draw(batch, "Run", Gdx.graphics.getWidth() / 2.0f - 12,65f);
+				//font.draw(batch, "Attack", Gdx.graphics.getWidth() / 2.0f - 12, 125f);
+				//font.draw(batch, "Item", Gdx.graphics.getWidth() / 2.0f - 12, 95f);
+				//font.draw(batch, "Run", Gdx.graphics.getWidth() / 2.0f - 12,65f);
+				firstOptionLabel.setText("Attack");
+				secondOptionLabel.setText("Item");
+				thirdOptionLabel.setText("Run");
 			}
+		}
+		else {
+			firstOptionLabel.setText("");
+			secondOptionLabel.setText("");
+			thirdOptionLabel.setText("");
 		}
 
 
