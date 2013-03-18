@@ -34,7 +34,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	 * Private constants for use in the game
 	 */
 	public static final float WALK_ANIMATION_LENGTH = 0.3f;
-	public static final float DAY_LENGTH_SECONDS = 600.0f;
+	public static final float DAY_LENGTH_SECONDS = 60.0f;
 	public static final int DAYS_SURVIVED_WITHOUT_WATER = 1;
 	public static final int DAYS_SURVIVED_WITHOUT_FOOD = 2;
 	public static final int STARTING_POSITION_X = 3;
@@ -92,6 +92,8 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private boolean walking;
 	
+	private Actor filter;
+	
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
@@ -115,7 +117,7 @@ public class GameLayer extends AbstractReceiverLayer {
 		dialogVisible = false;
 		removingDialog = false;
 		
-		time = 0.0f;
+		time = DAY_LENGTH_SECONDS / 2.0f;
 		days = 0;
 		
 		hungerDecreaseTime = DAY_LENGTH_SECONDS * DAYS_SURVIVED_WITHOUT_FOOD / 100.0f;
@@ -159,6 +161,15 @@ public class GameLayer extends AbstractReceiverLayer {
 		batch = new SpriteBatch ();
 		
 		walking = false;
+		
+		Texture filterTexture = new Texture(Gdx.files.internal("ui/Filter.png"));
+		TextureRegion filterRegion = new TextureRegion(filterTexture, WIDTH, HEIGHT);
+		filter = new Image(filterRegion);
+		filter.getColor().a = 0.0f;
+		filter.setPosition(0, 0);
+		filter.setVisible(false);
+		
+		stage.addActor(filter);
 	}
 	
 	/**
@@ -175,6 +186,10 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void draw (float delta) {
+		
+		Gdx.gl.glEnable(GL10.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
         // update the actors
         stage.act( delta );
 
@@ -189,6 +204,7 @@ public class GameLayer extends AbstractReceiverLayer {
         thirstTime += delta;
         hungerTime += delta;
         
+        
         if (hungerTime / hungerDecreaseTime > 1) {
         	// decrease player hunger
         	hungerTime = hungerTime % hungerDecreaseTime;
@@ -201,11 +217,35 @@ public class GameLayer extends AbstractReceiverLayer {
         	player.adjustThirst(-1.0f);
         }
         
+        
         if ((time / DAY_LENGTH_SECONDS) > 1) {
         	days++;
         	time = time % DAY_LENGTH_SECONDS;
         }
+        else if (time >= (DAY_LENGTH_SECONDS * 7.0f / 8.0f)) {
+        	filter.getColor().a = 0.5f;
+        }
+        else if (time >= (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) {
+        	// MAAAAATTTTTHHHHHH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        	float a = 0.5f * (time - (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) / (DAY_LENGTH_SECONDS * 0.25f);
+        	filter.getColor().a = a;
+        }
+        else if (time >= (DAY_LENGTH_SECONDS * 3.0f / 8.0f)) {
+        	filter.getColor().a = 0.0f;
+        }
+        else if (time >= (DAY_LENGTH_SECONDS / 8.0f)) {
+        	float a = 0.5f - 0.5f * (time - (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) / (DAY_LENGTH_SECONDS * 0.25f);
+        	if (a > 1) {
+        		a -= Math.floor(a);
+        	}
+        	filter.getColor().a = a;
+        }
+        else {
+        	filter.getColor().a = 0.5f;
+        }
         
+
+    	System.out.println (filter.getColor().a + "    " + (filter.isVisible() ? "visible" : "not"));
         
         
         if (walking) {
@@ -242,6 +282,8 @@ public class GameLayer extends AbstractReceiverLayer {
         character.draw(batch);
         batch.end();
         
+        
+        Gdx.gl.glDisable(GL10.GL_BLEND);
 	}
 	
 	
@@ -311,17 +353,20 @@ public class GameLayer extends AbstractReceiverLayer {
 				
 				if (currentLevel.isHouse()) {
 					currentLevel.unload();
+					filter.setVisible(true);
 				}
 				else {
 					town.setStartingX(positionX);
 					town.setStartingY(positionY);
 					townActor.setVisible(false);
+					filter.setVisible(false);
 				}
 				
 				currentLevel = nextLevel;
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
+				stage.addActor(filter);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -383,17 +428,20 @@ public class GameLayer extends AbstractReceiverLayer {
 				
 				if (currentLevel.isHouse()) {
 					currentLevel.unload();
+					filter.setVisible(true);
 				}
 				else {
 					town.setStartingX(positionX);
 					town.setStartingY(positionY);
 					townActor.setVisible(false);
+					filter.setVisible(false);
 				}
 				
 				currentLevel = nextLevel;
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
+				stage.addActor(filter);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -452,17 +500,20 @@ public class GameLayer extends AbstractReceiverLayer {
 				
 				if (currentLevel.isHouse()) {
 					currentLevel.unload();
+					filter.setVisible(true);
 				}
 				else {
 					town.setStartingX(positionX);
 					town.setStartingY(positionY);
 					townActor.setVisible(false);
+					filter.setVisible(false);
 				}
 				
 				currentLevel = nextLevel;
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
+				stage.addActor(filter);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
@@ -522,17 +573,20 @@ public class GameLayer extends AbstractReceiverLayer {
 				
 				if (currentLevel.isHouse()) {
 					currentLevel.unload();
+					filter.setVisible(true);
 				}
 				else {
 					town.setStartingX(positionX);
 					town.setStartingY(positionY);
 					townActor.setVisible(false);
+					filter.setVisible(false);
 				}
 				
 				currentLevel = nextLevel;
 				level = currentLevel.getImage();
 				level.setVisible(true);
 				stage.addActor(level);
+				stage.addActor(filter);
 				
 				positionX = currentLevel.getStartingX();
 				positionY = currentLevel.getStartingY();
