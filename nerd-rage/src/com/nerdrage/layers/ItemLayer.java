@@ -57,8 +57,8 @@ public class ItemLayer extends AbstractReceiverLayer {
 	private Texture water;
 	private Texture battery;
 
-	private int image_width=512;
-	private int image_height=310;
+	private int image_width=800;
+	private int image_height=480;
 
 	private Sprite inventoryScreenSprite;
 	private Sprite key1sprite;
@@ -93,7 +93,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 		stage = new Stage(WIDTH, HEIGHT, true);
 
 
-		inventoryScreenTexture = new Texture (Gdx.files.internal("inventory/inventory.png"));
+		inventoryScreenTexture = new Texture (Gdx.files.internal("inventory/InventoryBG.png"));
 		key1 = new Texture(Gdx.files.internal("inventory/Key1.png"));
 		key2 = new Texture(Gdx.files.internal("inventory/Key1.png"));
 		food = new Texture(Gdx.files.internal("inventory/food.png"));
@@ -101,7 +101,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 		battery = new Texture(Gdx.files.internal("inventory/battery.png"));
 		//rageScreenTexture = new Texture (Gdx.files.internal("inventory/Battlescreen2.png"));
 
-		inventoryScreenSprite = new Sprite (inventoryScreenTexture);
+		inventoryScreenSprite = new Sprite (new TextureRegion(inventoryScreenTexture, WIDTH, HEIGHT));
 		key1sprite = new Sprite (key1);
 		key2sprite = new Sprite (key2);
 		foodSprite = new Sprite (food);
