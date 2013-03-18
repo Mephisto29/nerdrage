@@ -97,7 +97,7 @@ public class PauseMenuScreen extends AbstractScreen {
 	}
 	
 	public void print(String text){
-		System.out.println(text);
+		////System.out.println(text);
 	}
 	
 	public void update(float delta){
@@ -118,18 +118,19 @@ public class PauseMenuScreen extends AbstractScreen {
 		Rectangle MainMenurectangle = new Rectangle(center,center_y,button_width,button_height);
 		if(Gdx.input.justTouched()){
 			if(point_in_rectangle(continue_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed continue");
+				////System.out.println("Pressed continue");
 				//Handle state variables here
 				game.setScreen(screen);
 				controlLayer.setReceiver(gameLayer);
 				controlLayer.setStartButtonVisible(true);
 			}
 			else if(point_in_rectangle(restart_rectangle,touched.x, touched.y)){
+				screen.stopMusic();
 				game.setScreen(new GameScreen(game));
-				System.out.println("Pressed restart");
+				////System.out.println("Pressed restart");
 			}
 			else if(point_in_rectangle(inventory_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed inventory");
+				////System.out.println("Pressed inventory");
 				
 				inventory.setPauseMenu(this);
 				game.setScreen(this);
@@ -142,12 +143,12 @@ public class PauseMenuScreen extends AbstractScreen {
 				
 			}
 			else if(point_in_rectangle(equipment_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed equipment");
+				////System.out.println("Pressed equipment");
 			}
 			else if(point_in_rectangle(MainMenurectangle,touched.x, touched.y)){
 				
 				
-				System.out.println("Pressed back to menu");
+				////System.out.println("Pressed back to menu");
 				screen.stopMusic();
 				game.setScreen(new MainMenuScreen(game));
 			}

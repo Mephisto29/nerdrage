@@ -79,7 +79,7 @@ public class MainMenuScreen extends AbstractScreen {
 	}
 	
 	public void print(String text){
-		System.out.println(text);
+		//System.out.println(text);
 	}
 	
 	public void update(float delta){
@@ -97,18 +97,18 @@ public class MainMenuScreen extends AbstractScreen {
 		Rectangle exit_rectangle=new Rectangle(center,center_y,button_width,button_height);
 		if(Gdx.input.justTouched()){
 			if(point_in_rectangle(play_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed play");
+				//System.out.println("Pressed play");
 				theme_song.pause();
 				game.setScreen(new GameScreen(game));
 			}
 			else if(point_in_rectangle(help_rectangle,touched.x, touched.y)){
-				System.out.println("Pressed help");
+				//System.out.println("Pressed help");
 				theme_song.pause();
 				game.setScreen(new HelpScreen(game));
 			}
 			else if(point_in_rectangle(exit_rectangle,touched.x, touched.y) || Gdx.input.isKeyPressed(Keys.BACK)){
 				theme_song.dispose();
-				System.out.println("Pressed exit");
+				//System.out.println("Pressed exit");
 				Gdx.app.exit();
 			}
 		}

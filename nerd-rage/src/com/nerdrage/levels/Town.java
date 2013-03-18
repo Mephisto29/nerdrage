@@ -34,7 +34,7 @@ public class Town extends Level {
 		for (TransitionBlock t : transitionBlocks.values()) {
 			
 			int r = (int) (Math.floor(Math.random()*MAX_HOUSES) + 1);
-			System.out.println ("random: " + r);
+			//System.out.println ("random: " + r);
 			
 			t.setTransitionTo("house" + r, true, this);
 		}
