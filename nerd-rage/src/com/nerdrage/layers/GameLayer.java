@@ -83,6 +83,11 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private Player player;
 	
+	private boolean viewingTown;
+	
+	Win_Lose_Screen gameEnd;
+	
+	private Music musicLoop;
 	private Animation walkUpAnimation;
 	private Animation walkDownAnimation;
 	private Animation walkLeftAnimation;
@@ -186,9 +191,25 @@ public class GameLayer extends AbstractReceiverLayer {
 	 */
 	@Override
 	public void draw (float delta) {
-		
+
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
+		if(days == 10 || player.getHealth() <=0 || player.getThirst() <= 0 || player.getHunger()<=0)
+		{
+			if(days==10)
+			{
+				gameEnd = new Win_Lose_Screen(game, 0, player);
+				gameEnd.setDays(10);
+			}
+			else
+			{
+				gameEnd = new Win_Lose_Screen(game, 1, player);
+				gameEnd.setDays(days);
+			}
+			
+			game.setScreen(gameEnd);
+		}
 		
         // update the actors
         stage.act( delta );

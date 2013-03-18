@@ -78,7 +78,9 @@ public class Player
 		double attackdamage = Math.random();
 		int tempdamage = (int)Math.floor(damage*attackdamage);
 		if(inRage)
+		{
 			tempdamage *=2;
+		}
 		if(tempdamage == 0)
 			return (1+equipDamage + level);
 		else
@@ -93,7 +95,7 @@ public class Player
 	public void setExperience(int exp)
 	{
 		experience = experience + exp;
-		if(experience >= level*100)
+		if(experience >= level*300)
 		{
 			level++;
 			experience = 0;
@@ -136,7 +138,7 @@ public class Player
 
 	public Player()
 	{
-		health = 100;
+		health = 1;
 		equipDamage = 0;
 		confuseChance = 33;
 		level = 1;
