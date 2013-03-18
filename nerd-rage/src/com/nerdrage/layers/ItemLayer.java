@@ -141,10 +141,10 @@ public class ItemLayer extends AbstractReceiverLayer {
 		for(int i = 0; i < player.items.size();i++)
 		{
 
-			//System.out.println("TESTING FOOD");
+			////System.out.println("TESTING FOOD");
 			if(player.items.elementAt(i).equals("food"))
 			{
-				//System.out.println("PRINTING FOOD");
+				////System.out.println("PRINTING FOOD");
 				foodSprite.setPosition(125+(120*(i-(5*itemy))), 351 - (120 * itemy ));
 				itemx++;
 				if(itemx ==5)
@@ -436,7 +436,7 @@ public class ItemLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void yPressed() {
-		System.out.println("PRESSED Y");
+		//System.out.println("PRESSED Y");
 		pauseMenuScreen.exitInventory();
 		// TODO Auto-generated method stub
 

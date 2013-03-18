@@ -440,7 +440,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					if(position == 0)
 					{
-						System.out.println("ATTACK");
+						////System.out.println("ATTACK");
 						enemy.setHealth(player.getDamage());
 						playerTurn = false;
 						playerstep = true;
@@ -449,15 +449,15 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 						if(enemy.getHealth() <= 0)
 						{
-							System.out.println("VICTORY");
-							System.out.println("YOU HAVE WON");
+							////System.out.println("VICTORY");
+							////System.out.println("YOU HAVE WON");
 							playerstep = false;
 							step3 = true;
 						}
 					}
 					else if (position == 1)
 					{
-						System.out.println("USE SPECIAL ATTACK");
+						////System.out.println("USE SPECIAL ATTACK");
 						confuse = (Math.random() * 100);
 						if (confuse < player.confuseChance)
 						{
@@ -479,7 +479,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					}
 					else if (position == 2)
 					{
-						System.out.println("Critical");
+						////System.out.println("Critical");
 						double crit = Math.random();
 						if(crit > 0.5)
 						{
@@ -503,8 +503,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 						if(enemy.getHealth() <= 0)
 						{
-							System.out.println("VICTORY");
-							System.out.println("YOU HAVE WON");
+							////System.out.println("VICTORY");
+							////System.out.println("YOU HAVE WON");
 							playerstep = false;
 							step3 = true;
 						}
@@ -515,7 +515,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					if(position == 0 && (player.waters > 0))
 					{
-						System.out.println("USE WATER");
+						////System.out.println("USE WATER");
 						enemy.setDamage();
 						playerTurn = false;
 						playerstep = true;
@@ -528,7 +528,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					}
 					else if (position == 1 && (player.foods > 0))
 					{
-						System.out.println("USE FOOD");
+						////System.out.println("USE FOOD");
 						runawaychance = runawaychance + 33;
 						playerTurn = false;
 						usedFood = true;
@@ -539,7 +539,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					else if (position == 2 && (player.batteries > 0))
 					{
 
-						System.out.println("USE LAPTOP");
+						////System.out.println("USE LAPTOP");
 						//enemy.setDamage();
 						playerTurn = false;
 						playerstep = true;
@@ -555,17 +555,17 @@ public class CombatLayer extends AbstractReceiverLayer {
 				{
 					if(position == 0)
 					{
-						System.out.println("ATTACK MENU");
+						////System.out.println("ATTACK MENU");
 						attackMenu = true;
 					}
 					else if (position == 1)
 					{
-						System.out.println("ITEM MENU");
+						////System.out.println("ITEM MENU");
 						itemMenu = true;
 					}
 					else if (position == 2)
 					{
-						System.out.println("RUNNNNNNN!!!!!!");
+						////System.out.println("RUNNNNNNN!!!!!!");
 						run = true;
 						runable = (Math.random() * 100);
 						if (runable < runawaychance)
@@ -725,7 +725,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 
 					if(ranAway) 
 					{
-						System.out.println("ESCAPED");
+						////System.out.println("ESCAPED");
 
 					}
 					else if(bonusTurn > 0)

@@ -274,7 +274,7 @@ public class GameLayer extends AbstractReceiverLayer {
         }
         
         
-        System.out.println (COMBAT_CHANCE);
+        //System.out.println (COMBAT_CHANCE);
         
         if (walking) {
         	stateTime += delta;
@@ -814,7 +814,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	public void startPressed() {
 
 //<<<<<<< Updated upstream
-		System.out.println ("S");
+		//System.out.println ("S");
 		//game.setScreen(new ResumeMainMenuScreen(game));
 //=======
 		game.setScreen(new PauseMenuScreen(this, controlLayer, inventory, game, gameScreen));

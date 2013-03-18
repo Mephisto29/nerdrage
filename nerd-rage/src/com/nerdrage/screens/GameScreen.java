@@ -89,7 +89,7 @@ public class GameScreen extends AbstractScreen {
 			break;
 		case PAUSED:
 			game.setScreen(new PauseMenuScreen(gameLayer, controlLayer, inventory, game, this));
-			//System.out.println("Game paused");
+			////System.out.println("Game paused");
 			break;
 		}
 		

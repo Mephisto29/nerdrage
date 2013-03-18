@@ -63,7 +63,7 @@ public class HelpScreen extends AbstractScreen {
 	}
 
 	public void print(String text) {
-		System.out.println(text);
+		//System.out.println(text);
 	}
 
 	public void update(float delta) {
@@ -79,7 +79,7 @@ public class HelpScreen extends AbstractScreen {
 		
 		if (Gdx.input.justTouched()) {
 			if (point_in_rectangle(back_rectangle, touched.x, touched.y)) {
-				System.out.println("Pressed back");
+				//System.out.println("Pressed back");
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}

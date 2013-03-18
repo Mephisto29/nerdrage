@@ -66,7 +66,7 @@ public class Level {
 			for (int y = 0; y < height; y++) {
 				line = input.readLine();
 				
-				System.out.println (line);
+				//System.out.println (line);
 				
 				for (int x = 0; x < width; x++)  {
 					levelGrid[y][x] = line.charAt(x);
@@ -119,7 +119,7 @@ public class Level {
 			}
 		}
 		catch (IOException e) {
-			System.out.println ("Error reading in file");
+			//System.out.println ("Error reading in file");
 		}
 		
 		if (NerdRageGame.DEBUG) {
@@ -184,7 +184,7 @@ public class Level {
 	 * @return The width of the level
 	 */
 	public int getWidth () {
-		System.out.println (width * 64);
+		//System.out.println (width * 64);
 		return width;
 	}
 	
@@ -194,7 +194,7 @@ public class Level {
 	 * @return The height of the level
 	 */
 	public int getHeight () {
-		System.out.println (height * 64);
+		//System.out.println (height * 64);
 		return height;
 	}
 	
@@ -225,13 +225,13 @@ public class Level {
 	public Image getImage () {
 		
 		if (isLoaded) {
-			System.out.println ("image loaded is:" + imageToLoad.path());
+			//System.out.println ("image loaded is:" + imageToLoad.path());
 			return levelImage;
 		}
 		
 		load();
 		
-		System.out.println ("image to load is:" + imageToLoad.path());
+		//System.out.println ("image to load is:" + imageToLoad.path());
 		return levelImage;
 	}
 	

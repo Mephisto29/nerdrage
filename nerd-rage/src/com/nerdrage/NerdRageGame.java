@@ -13,8 +13,8 @@ public class NerdRageGame extends Game {
 	/**
 	 * Static variables which the whole game needs to know about
 	 */
-	public static final boolean DEBUG = true;
-	public static final String VERSION = "v0.01";
+	public static final boolean DEBUG = false;
+	public static final String VERSION = "v1.0";
 	public static final String GAME_NAME = "Nerd Rage";
 	public static FPSLogger fpsLogger;
 

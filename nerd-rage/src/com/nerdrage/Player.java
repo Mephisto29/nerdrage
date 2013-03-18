@@ -123,7 +123,7 @@ public class Player
 		
 		if(nrOfItems < 15)
 		{
-			System.out.println("PICKED UP : " + item);
+			//System.out.println("PICKED UP : " + item);
 			items.add(item);
 			if(item.equals("food"))
 				foods++;
@@ -132,13 +132,13 @@ public class Player
 			else if (item.equals("battery"))
 				batteries++;
 		}
-		else
-			System.out.println("YOU DO NOT HAVE SPACE NERD");
+		//else
+			//System.out.println("YOU DO NOT HAVE SPACE NERD");
 	}
 
 	public Player()
 	{
-		health = 1;
+		health = 100;
 		equipDamage = 0;
 		confuseChance = 33;
 		level = 1;
