@@ -7,6 +7,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.nerdrage.Player;
 import com.sun.org.apache.bcel.internal.generic.FADD;
 
@@ -33,6 +37,10 @@ public class Win_Lose_Screen extends AbstractScreen {
 	private Game game;
 	private int image_width=800;
 	private int image_height=480;
+	
+	private Label firstOptionLabel;
+	private Label secondOptionLabel;
+	private Label thirdOptionLabel;
 	
 	Player player;
 	int days;
@@ -50,6 +58,27 @@ public class Win_Lose_Screen extends AbstractScreen {
 		this.player = player;
 
 		spritebatch = new SpriteBatch ();
+		
+		font = new BitmapFont(Gdx.files.internal("fonts/nerd.fnt"), false);
+
+		firstOptionLabel = new Label("".subSequence(0, 0), new LabelStyle(font, Color.WHITE));
+		firstOptionLabel.setPosition(Gdx.graphics.getWidth() / 2.0f - 80.0f, 125f);
+		firstOptionLabel.setAlignment(Align.center);
+		firstOptionLabel.setWidth(160.0f);
+		secondOptionLabel = new Label("".subSequence(0, 0), new LabelStyle(font, Color.WHITE));
+		secondOptionLabel.setPosition(Gdx.graphics.getWidth() / 2.0f - 80.0f, 85f);
+		secondOptionLabel.setAlignment(Align.center);
+		secondOptionLabel.setWidth(160.0f);
+		thirdOptionLabel = new Label("".subSequence(0, 0), new LabelStyle(font, Color.WHITE));
+		thirdOptionLabel.setPosition(Gdx.graphics.getWidth() / 2.0f - 80.0f, 45f);
+		thirdOptionLabel.setAlignment(Align.center);
+		thirdOptionLabel.setWidth(160.0f);
+		
+		firstOptionLabel.setText("TimeBonus:    " +  days*1000);
+		secondOptionLabel.setText("Level Score:  " + (player.getLevel()*300));
+		thirdOptionLabel.setText("Total Score : " + (int)((player.getLevel()*300) + days*1000));
+		
+		
 
 		font = new BitmapFont();
 		stage = new Stage();
@@ -65,22 +94,26 @@ public class Win_Lose_Screen extends AbstractScreen {
 		
 		spritebatch.begin();
 		spritebatch.draw(splash_texture_region,0,0,image_width,image_height);
-		font.draw(spritebatch, "Total Score : " + (int)((player.getLevel()*300) + days*1000), Gdx.graphics.getWidth() / 2.0f - 12, 125f);
-		font.draw(spritebatch, "Level Score:  " + (player.getLevel()*300), Gdx.graphics.getWidth() / 2.0f - 12, 175f);
-		font.draw(spritebatch, "TimeBonus:    " +  days*1000, Gdx.graphics.getWidth() / 2.0f - 12, 150f);
+		
+		stage.addActor(firstOptionLabel);
+		stage.addActor(secondOptionLabel);
+		stage.addActor(thirdOptionLabel);
+		//font.draw(spritebatch, "Total Score : " + (int)((player.getLevel()*300) + days*1000), Gdx.graphics.getWidth() / 2.0f - 12, 125f);
+		//font.draw(spritebatch, "Level Score:  " + (player.getLevel()*300), Gdx.graphics.getWidth() / 2.0f - 12, 175f);
+		//font.draw(spritebatch, "TimeBonus:    " +  days*1000, Gdx.graphics.getWidth() / 2.0f - 12, 150f);
 		spritebatch.end();
 
-		//stage.act( delta );
+		stage.act( delta );
 
         // clear the screen with the given RGB color (black)
-        //Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
-        //Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+        Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
+        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 
         // draw the actors
-        //stage.draw();
+        stage.draw();
         
-       // Gdx.gl.glEnable(GL10.GL_BLEND);
-		//Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        //Gdx.gl.glEnable(GL10.GL_BLEND);
+        //Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		//batch.begin();
         
