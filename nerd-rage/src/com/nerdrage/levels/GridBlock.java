@@ -69,7 +69,7 @@ public class GridBlock {
 		itemTaken = true;
 		interactionText = "Shoot! Just my luck! There's nothing left.";
 		
-		while (sum <= random && itemNum < probabilities.length) {
+		while (sum <= random && itemNum < probabilities.length - 1) {
 			itemNum++;
 			sum += probabilities[itemNum];
 		}
