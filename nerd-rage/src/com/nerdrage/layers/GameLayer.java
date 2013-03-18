@@ -51,6 +51,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	private Game game;
 	private ControlLayer controlLayer;
 	private GameScreen gameScreen;
+	private ItemLayer inventory;
 	
 	private static int WIDTH = 800;
 	private static int HEIGHT = 480;
@@ -102,11 +103,12 @@ public class GameLayer extends AbstractReceiverLayer {
 	/**
 	 * Constructor which sets up a sprite batch to handle drawing
 	 */
-	public GameLayer(Game game, Player player, GameScreen gameScreen) {
+	public GameLayer(Game game, Player player, GameScreen gameScreen, ItemLayer inventory) {
 		
 		this.game = game;
 		this.player = player;
 		this.gameScreen = gameScreen;
+		this.inventory = inventory;
 		
 		stage = new Stage(WIDTH, HEIGHT, true);
 		
@@ -601,7 +603,8 @@ public class GameLayer extends AbstractReceiverLayer {
 					Item item = g.getItem();
 					
 					if (item != null) {
-						text = "You picked up item " + item.getId();	
+						text = "You picked up item " + item.getId();
+						player.addItem("food");
 					}
 					else {
 						text = "Meh... found nothing.";
@@ -714,7 +717,13 @@ public class GameLayer extends AbstractReceiverLayer {
 
 	@Override
 	public void startPressed() {
-		game.setScreen(new PauseMenuScreen(game));
+
+//<<<<<<< Updated upstream
+		System.out.println ("S");
+		//game.setScreen(new ResumeMainMenuScreen(game));
+//=======
+		game.setScreen(new PauseMenuScreen(this, controlLayer, inventory, game, gameScreen));
+//>>>>>>> Stashed changes
 	}
 
 }
