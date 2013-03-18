@@ -252,7 +252,7 @@ public class GameLayer extends AbstractReceiverLayer {
         	float a = 0.5f * (time - (DAY_LENGTH_SECONDS * 5.0f / 8.0f)) / (DAY_LENGTH_SECONDS * 0.25f);
         	filter.getColor().a = a;
         	
-        	COMBAT_CHANCE = 0.05f + ((1.0f - (2.0f * a)) * 0.15f);
+        	COMBAT_CHANCE = 0.2f - ((2.0f * a) * 0.15f);
         }
         else if (time >= (DAY_LENGTH_SECONDS * 3.0f / 8.0f)) {
         	filter.getColor().a = 0.0f;
@@ -274,7 +274,7 @@ public class GameLayer extends AbstractReceiverLayer {
         }
         
         
-        //System.out.println (COMBAT_CHANCE);
+        System.out.println (COMBAT_CHANCE);
         
         if (walking) {
         	stateTime += delta;
