@@ -17,15 +17,20 @@ public class TransitionBlock {
 	private boolean toHouse;
 	private Town town;
 	
+	private int x;
+	private int y;
+	
 	/**
 	 * Constructor which accepts the level to transition to
 	 * 
 	 * @param transitionTo The level to transition to
 	 */
-	public TransitionBlock (Level transitionTo) {
+	public TransitionBlock (Level transitionTo, int x, int y) {
 		this.transitionTo = transitionTo;
 		levelToLoad = null;
 		imageToLoad = null;
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**
@@ -33,19 +38,23 @@ public class TransitionBlock {
 	 * 
 	 * @param level The name of the level to transition to
 	 */
-	public TransitionBlock (String level) {
+	public TransitionBlock (String level, int x, int y) {
 		levelToLoad = "levels/" + level + ".txt";
 		imageToLoad = "levels/images/" + level + ".png";
 		transitionTo = null;
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**
 	 * Constructor which accepts no arguments
 	 */
-	public TransitionBlock () {
+	public TransitionBlock (int x, int y) {
 		levelToLoad = null;
 		imageToLoad = null;
 		transitionTo = null;
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**
@@ -88,6 +97,24 @@ public class TransitionBlock {
 		transitionTo = null;
 		this.toHouse = toHouse;
 		this.town = town;
+	}
+	
+	/**
+	 * Method to get the y position of the transition block
+	 * 
+	 * @return the x position
+	 */
+	public int getX () {
+		return x;
+	}
+	
+	/**
+	 * Method to get the y position of the transition block
+	 * 
+	 * @return the y position
+	 */
+	public int getY () {
+		return y;
 	}
 
 }

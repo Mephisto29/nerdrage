@@ -13,6 +13,11 @@ public class Town extends Level {
 	private int currentX;
 	private int currentY;
 	
+	public static final int STARTING_POSITION_X = 3;
+	public static final int STARTING_POSITION_Y = 11;
+	
+	public static final int MAX_HOUSES = 3;
+	
 	/**
 	 * Constructor which sets some additional fields
 	 * 
@@ -27,7 +32,11 @@ public class Town extends Level {
 		isTown = true;
 		
 		for (TransitionBlock t : transitionBlocks.values()) {
-			t.setTransitionTo("house1", true, this);
+			
+			int r = (int) (Math.floor(Math.random()*MAX_HOUSES) + 1);
+			System.out.println ("random: " + r);
+			
+			t.setTransitionTo("house" + r, true, this);
 		}
 	}
 	
