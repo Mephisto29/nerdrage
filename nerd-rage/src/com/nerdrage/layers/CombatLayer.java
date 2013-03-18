@@ -198,7 +198,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 		rage_screen_texture_region = new TextureRegion(rageScreenTexture,0,0,image_width,image_height);
 
 
-		font = new BitmapFont();
+		font = new BitmapFont(Gdx.files.internal("fonts/nerd.fnt"), false);
+		font.setColor(Color.WHITE);
 
 	}
 

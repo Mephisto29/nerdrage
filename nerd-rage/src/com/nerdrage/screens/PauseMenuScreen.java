@@ -145,6 +145,7 @@ public class PauseMenuScreen extends AbstractScreen {
 			}
 			else if(point_in_rectangle(MainMenurectangle,touched.x, touched.y)){
 				System.out.println("Pressed back to menu");
+				screen.stopMusic();
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}

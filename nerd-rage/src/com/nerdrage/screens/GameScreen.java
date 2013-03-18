@@ -5,6 +5,7 @@ import sun.awt.windows.ThemeReader;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL10;
 import com.nerdrage.Player;
 import com.nerdrage.layers.*;
@@ -30,6 +31,8 @@ public class GameScreen extends AbstractScreen {
 	public Player player;
 	private boolean inCombat = false;
 	private PauseMenuScreen pauseMenu; 
+	
+	private Music musicLoop;
 
 	public GameScreen (Game game) {
 		
@@ -54,6 +57,8 @@ public class GameScreen extends AbstractScreen {
 		gameLayer.setControlLayer(controlLayer);
 		pauseMenu = new PauseMenuScreen(gameLayer, controlLayer, inventory, game, this);
 		
+		
+		musicLoop = Gdx.audio.newMusic(Gdx.files.internal("audio/town_loop.mp3"));
 	}
 	
 	@Override
@@ -88,6 +93,12 @@ public class GameScreen extends AbstractScreen {
 			break;
 		}
 		
+		if (! musicLoop.isPlaying()) {
+        	musicLoop.setLooping(true);
+    		musicLoop.setVolume(0.8f);
+    		musicLoop.play();
+        }
+		
 		//override back button of phone to go back to pause menu
 		if(Gdx.input.isKeyPressed(Keys.BACK)){
 			game_state=State.PAUSED;
@@ -101,7 +112,13 @@ public class GameScreen extends AbstractScreen {
 		
 	}
 	
+	public void stopMusic () {
+		musicLoop.stop();
+	}
+	
 	public void enterCombat () {
+		musicLoop.stop();
+		musicLoop = Gdx.audio.newMusic(Gdx.files.internal("audio/combat_loop.mp3"));
 		inCombat = true;
 		combatLayer = new CombatLayer(player, this);
 		controlLayer.setReceiver (combatLayer);
@@ -109,6 +126,8 @@ public class GameScreen extends AbstractScreen {
 	}
 	
 	public void exitCombat () {
+		musicLoop.stop();
+		musicLoop = Gdx.audio.newMusic(Gdx.files.internal("audio/town_loop.mp3"));
 		inCombat = false;
 		controlLayer.setReceiver (gameLayer);
 		controlLayer.setStartButtonVisible(true);

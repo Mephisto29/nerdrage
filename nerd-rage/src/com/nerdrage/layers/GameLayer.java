@@ -85,7 +85,7 @@ public class GameLayer extends AbstractReceiverLayer {
 	
 	private boolean viewingTown;
 	
-	private Music musicLoop;
+	
 	
 	private Animation walkUpAnimation;
 	private Animation walkDownAnimation;
@@ -134,7 +134,7 @@ public class GameLayer extends AbstractReceiverLayer {
 		
 		viewingTown = false;
 		
-		musicLoop = Gdx.audio.newMusic(Gdx.files.internal("audio/town_loop.mp3"));
+		
 
 		Texture walkSheet = new Texture (Gdx.files.internal("actors/nerd_spritesheet.png"));
 		TextureRegion[][] tmp = TextureRegion.split(walkSheet, 64, 64);
@@ -222,12 +222,7 @@ public class GameLayer extends AbstractReceiverLayer {
         	time = time % DAY_LENGTH_SECONDS;
         }
         
-        if (! musicLoop.isPlaying()) {
-        	
-        	musicLoop.setLooping(true);
-    		musicLoop.setVolume(0.8f);
-    		musicLoop.play();
-        }
+        
         
         if (walking) {
         	stateTime += delta;
