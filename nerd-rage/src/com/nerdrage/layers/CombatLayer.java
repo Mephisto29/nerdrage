@@ -422,7 +422,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					{
 						System.out.println("USE SPECIAL ATTACK");
 						confuse = (Math.random() * 100);
-						if (confuse < 50)
+						if (confuse < player.confuseChance)
 						{
 							confused = true;
 						}
@@ -506,7 +506,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 							//enemy.setDamage();
 							playerTurn = false;
 							playerstep = true;
-							bonusTurn = 2;
+							bonusTurn += 2;
 							hacked = true;
 							player.batteries--;
 
@@ -593,7 +593,8 @@ public class CombatLayer extends AbstractReceiverLayer {
 							{
 								enemy.setHealth(enemy.getDamage());
 								text = text + "Jock hurts itself in its confusion";
-								step1 = true;
+								step2 = true;
+								step1 = false;
 							}
 							else
 							{
@@ -631,7 +632,7 @@ public class CombatLayer extends AbstractReceiverLayer {
 					{
 						if (confuse < confusedAttack)
 						{
-							step3 = true;
+							//step3 = true;
 						}
 						else if(enemyAttack.equals("FLEX!!!!!"))
 						{

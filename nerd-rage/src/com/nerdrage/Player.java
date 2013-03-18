@@ -7,8 +7,9 @@ public class Player
 	int health;
 	int level;
 	int damage;
-	int equipDamage;
+	public int equipDamage;
 	int experience;
+	public int defence;
 	float thirst;
 	float hunger;
 	float nerdRage;
@@ -19,6 +20,7 @@ public class Player
 	
 	public Vector<String> items;
 	public int nrOfItems;
+	public double confuseChance;
 	
 	
 	public int getHealth()
@@ -50,9 +52,15 @@ public class Player
 	
 	public void setHealth(int damage)
 	{
-		health = health - damage;
+		if(damage > 0)
+			damage = damage - defence;
 		
-		nerdRage += damage*(Math.random()* 3);
+		if(damage < 0)
+			damage = 0;
+		
+		health = health - (damage);
+		
+		nerdRage += damage *4;//*(Math.random()* 3);
 	}
 	
 	public int getLevel()
@@ -119,7 +127,7 @@ public class Player
 				foods++;
 			else if(item.equals("water"))
 				waters++;
-			else if (item.equals("batteries"))
+			else if (item.equals("battery"))
 				batteries++;
 		}
 		else
@@ -130,6 +138,7 @@ public class Player
 	{
 		health = 100;
 		equipDamage = 0;
+		confuseChance = 33;
 		level = 1;
 		experience = 0;
 		damage = 10;
